@@ -21,7 +21,6 @@
     <Folder Include="Controllers\" />
     <Folder Include="Models\DTO\" />
     <Folder Include="Repositories\" />
-    <Folder Include="Profiles\" />
   </ItemGroup>
 
 </Project>
