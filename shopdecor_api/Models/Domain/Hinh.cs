@@ -7,7 +7,6 @@ namespace shopdecor_api.Models.Domain
         public int Id { get; set; }
         [Column(TypeName = "Varchar(max)")]
         public string? TenHinh { get; set; }
-        public int IdSanPham { get; set; }
         public virtual SanPham? SanPham { get; set; }
     }
 }
