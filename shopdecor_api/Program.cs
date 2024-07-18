@@ -26,6 +26,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
+
+
 var app = builder.Build();
 
 app.UseCors(builder =>
