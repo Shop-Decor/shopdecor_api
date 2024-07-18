@@ -142,7 +142,10 @@ namespace shopdecor_api.Migrations
                     b.Property<DateTime>("HSD")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("LoaiGiam")
+                    b.Property<bool>("LoaiGiam")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LoaiKM")
                         .HasColumnType("bit");
 
                     b.Property<int>("MenhGia")

@@ -8,10 +8,6 @@ namespace shopdecor_api.Models.Domain
 
         [Column(TypeName = "Varchar(max)")]
         public string? TenHinh { get; set; }
-
-        public int SanPhamId { get; set; } // This property is important to link to SanPham
-
-        [ForeignKey("SanPhamId")]
         public virtual SanPham? SanPham { get; set; }
     }
 }

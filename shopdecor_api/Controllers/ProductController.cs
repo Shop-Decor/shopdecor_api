@@ -32,7 +32,7 @@ namespace shopdecor_api.Controllers
         public async Task<IActionResult> GetProductsbyId(int id)
         {
             var Sp = await _productRepository.GetProductsAsync(id);
-            return Sp == null? NotFound() : Ok(Sp);
+            return Sp == null ? NotFound() : Ok(Sp);
         }
         [HttpPost]
         public async Task<IActionResult> AddNewProducts(SanPham model)
@@ -49,9 +49,9 @@ namespace shopdecor_api.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id,[FromBody] SanPham model)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] SanPham model)
         {
-            if(id != model.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
@@ -67,8 +67,8 @@ namespace shopdecor_api.Controllers
             return Ok("Thành Công");
         }
 
-      
-        
+
+
         [HttpPost("{id}/upload-images")]
         public async Task<IActionResult> UploadImages(int id, List<IFormFile> files)
         {
@@ -76,7 +76,11 @@ namespace shopdecor_api.Controllers
             {
                 return BadRequest("No files uploaded.");
             }
-
+            var product = await _productRepository.GetProductsAsync(id);
+            if (product == null)
+            {
+                return NotFound("product not found.");
+            }
             try
             {
                 foreach (var file in files)
@@ -93,7 +97,7 @@ namespace shopdecor_api.Controllers
                         var hinh = new Hinh
                         {
                             TenHinh = file.FileName,
-                            SanPhamId = id
+                            SanPham = product
                         };
 
                         await _productRepository.AddImageAsync(hinh);
@@ -110,5 +114,5 @@ namespace shopdecor_api.Controllers
 
     }
 }
- 
+
 
