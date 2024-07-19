@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Data;
+using shopdecor_api.Repositories.DiscountRepositories;
 using shopdecor_api.Repositories.ProductRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,7 @@ builder.Services.AddDbContext<SeabugDbContext>(options =>
 });
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
