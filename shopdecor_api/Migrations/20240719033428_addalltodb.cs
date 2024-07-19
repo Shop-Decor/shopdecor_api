@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace shopdecor_api.Migrations
 {
     /// <inheritdoc />
-    public partial class db : Migration
+    public partial class addalltodb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -117,6 +117,7 @@ namespace shopdecor_api.Migrations
                     NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NgayHuy = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LyDoHuy = table.Column<string>(type: "Nvarchar(max)", nullable: true),
+                    ThanhTien = table.Column<int>(type: "int", nullable: false),
                     TTDonHang = table.Column<byte>(type: "tinyint", nullable: false),
                     TTThanhToan = table.Column<bool>(type: "bit", nullable: false),
                     TaiKhoanId = table.Column<int>(type: "int", nullable: true),

@@ -54,10 +54,10 @@ namespace shopdecor_api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             if(DiscountUpdate == null)
+            {
                 return NotFound();
+            }  
             return NoContent();
         }
-
-
     }
 }

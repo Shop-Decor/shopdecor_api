@@ -12,8 +12,8 @@ using shopdecor_api.Data;
 namespace shopdecor_api.Migrations
 {
     [DbContext(typeof(SeabugDbContext))]
-    [Migration("20240718141506_db")]
-    partial class db
+    [Migration("20240719033428_addalltodb")]
+    partial class addalltodb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,9 @@ namespace shopdecor_api.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int?>("TaiKhoanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ThanhTien")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

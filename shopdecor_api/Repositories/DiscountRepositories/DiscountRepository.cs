@@ -39,13 +39,19 @@ namespace shopdecor_api.Repositories.DiscountRepositories
             var discountExist =  await _context.KhuyenMai.FirstOrDefaultAsync(x => x.MaGiamGia == maGiamGia);
             if (khuyenMai == null)
                 return null;
-            discountExist.MenhGia = khuyenMai.MenhGia;
-            discountExist.LoaiGiam = khuyenMai.LoaiGiam;
-            discountExist.MoTa = khuyenMai.MoTa;
-            discountExist.NgayTao = khuyenMai.NgayTao;
-            discountExist.HSD = khuyenMai.HSD;
-            await _context.SaveChangesAsync();
-            return khuyenMai;
+            if(discountExist.LoaiKM == true)
+            {
+                discountExist.MenhGia = khuyenMai.MenhGia;
+                discountExist.LoaiGiam = khuyenMai.LoaiGiam;
+                discountExist.MoTa = khuyenMai.MoTa;
+                discountExist.NgayTao = khuyenMai.NgayTao;
+                discountExist.HSD = khuyenMai.HSD;
+                discountExist.LoaiKM = khuyenMai.LoaiKM;
+                await _context.SaveChangesAsync();
+                return khuyenMai;
+            }
+            return null;
+            
         }
     }
 }
