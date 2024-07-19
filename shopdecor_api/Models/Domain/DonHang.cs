@@ -9,6 +9,7 @@ namespace shopdecor_api.Models.Domain
         public DateTime NgayHuy { get; set; }
         [Column(TypeName = "Nvarchar(max)")]
         public string? LyDoHuy { get; set; }
+        public int ThanhTien { get; set; }
         // 0. Chờ xách nhận / 1. Đang giao / 2. Đã giao / 3.Đã Hủy
         public byte TTDonHang { get; set; }
         public bool TTThanhToan { get; set; }

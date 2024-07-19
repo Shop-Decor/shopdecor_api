@@ -54,6 +54,9 @@ namespace shopdecor_api.Migrations
                     b.Property<int?>("TaiKhoanId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ThanhTien")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("KhuyenMaiMaGiamGia");

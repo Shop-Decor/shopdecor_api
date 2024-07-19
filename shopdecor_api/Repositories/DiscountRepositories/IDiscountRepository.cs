@@ -10,5 +10,6 @@ namespace shopdecor_api.Repositories.DiscountRepositories
 
         Task<KhuyenMai> AddAsync(KhuyenMai khuyenMai);
         Task<KhuyenMai?> UpdateAsync(KhuyenMai khuyenMai, string maGiamGia);
+        
     }
 }
