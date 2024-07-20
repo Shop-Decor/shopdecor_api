@@ -27,22 +27,16 @@ namespace shopdecor_api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProducts()
         {
-            try
-            {
-                return Ok(await _productRepository.GetAllAsync());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            //var products = await _productRepository.GetAllAsync();
-            //return Ok(products);
+            var product = await _productRepository.GetAllAsync();
+            var map = _mapper.Map<List<IndexProductRequest>>(product);
+            return Ok(map);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductsbyId(int id)
         {
-            var Sp = await _productRepository.GetProductsAsync(id);
-            return Sp == null ? NotFound() : Ok(Sp);
+            var product = await _productRepository.GetProductsAsync(id);
+            var maps = _mapper.Map<IndexProductRequest>(product);
+            return Ok(maps);
         }
         [HttpPost]
         public async Task<IActionResult> AddNewProducts([FromBody] AddProductRequest model)
@@ -71,22 +65,40 @@ namespace shopdecor_api.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] SanPham model)
+        public async Task<IActionResult> UpdateProduct(int id,[FromBody]UpdateProductRequest updateProductRequest)
         {
-            if (id != model.Id)
+            var map = _mapper.Map<SanPham>(updateProductRequest);
+            var productupdate = await _productRepository.UpdateProductsAsync(id,map);
+            if(productupdate == null)
             {
                 return NotFound();
             }
-            await _productRepository.UpdateProductsAsync(id, model);
-            return Ok("Thành Công");
+            if (updateProductRequest.MaGiamGia != null)
+            {
+                var discount = await _discountRepository.GetAsync(updateProductRequest.MaGiamGia);
+                productupdate.KhuyenMai = discount;
+            }
+            if (updateProductRequest.Imgs.Count() > 0)
+            {
+                await _imageRepository.RemoveImageByProductAsync(productupdate);
+                foreach (var item in updateProductRequest.Imgs)
+                {
+                    await _imageRepository.AddImageByProductAsync(item, productupdate);
+                }
+
+            }
+            return Ok(productupdate);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct([FromRoute] int id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
+            var delProduct = await _productRepository.DeleteProductsAsync(id);
+            if (delProduct != null)
+                delProduct.TrangThai = false;
+            return NoContent();
 
-            await _productRepository.DeleteProductsAsync(id);
-            return Ok("Thành Công");
+            
         }
 
         //[HttpPost("{id}/upload-images")]
