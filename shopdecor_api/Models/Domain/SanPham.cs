@@ -10,7 +10,8 @@ namespace shopdecor_api.Models.Domain
         [Column(TypeName = "Nvarchar(max)")]
         public string? MoTa { get; set; }
         public DateTime NgayTao { get; set; }
-        public string? TrangThai { get; set; }
+        //1:đang bán, 0:ngừng bán
+        public bool TrangThai { get; set; }
         public virtual KhuyenMai? KhuyenMai { get; set; }
         public virtual IEnumerable<SanPham_Loai>? SanPham_Loais { get; set; }
         public virtual IEnumerable<Hinh>? Hinhs { get; set; }

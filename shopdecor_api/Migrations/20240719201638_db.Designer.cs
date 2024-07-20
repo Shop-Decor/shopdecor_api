@@ -12,7 +12,7 @@ using shopdecor_api.Data;
 namespace shopdecor_api.Migrations
 {
     [DbContext(typeof(SeabugDbContext))]
-    [Migration("20240718141506_db")]
+    [Migration("20240719201638_db")]
     partial class db
     {
         /// <inheritdoc />
@@ -103,11 +103,11 @@ namespace shopdecor_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Link")
+                        .HasColumnType("Varchar(max)");
+
                     b.Property<int?>("SanPhamId")
                         .HasColumnType("int");
-
-                    b.Property<string>("TenHinh")
-                        .HasColumnType("Varchar(max)");
 
                     b.HasKey("Id");
 
@@ -233,8 +233,8 @@ namespace shopdecor_api.Migrations
                     b.Property<string>("Ten")
                         .HasColumnType("Nvarchar(200)");
 
-                    b.Property<string>("TrangThai")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("TrangThai")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

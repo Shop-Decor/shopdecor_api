@@ -17,13 +17,13 @@ namespace shopdecor_api.Repositories.ProductRepositories
 
         }
 
-        public async Task<int> AddProductsAsync(SanPham model)
+        public async Task<SanPham> AddProductsAsync(SanPham model)
         {
-            var NewSp = _mapper.Map<SanPham>(model);
-            _db.SanPham!.Add(NewSp);
+            model.NgayTao = DateTime.Now;
+            model.TrangThai = true;
+            await _db.SanPham.AddAsync(model);
             await _db.SaveChangesAsync();
-
-            return NewSp.Id;
+            return model;
         }
 
         public async Task<IEnumerable<SanPham>> GetAllAsync()
@@ -41,7 +41,7 @@ namespace shopdecor_api.Repositories.ProductRepositories
 
         public async Task UpdateProductsAsync(int id, SanPham model)
         {
-            if(id == model.Id)
+            if (id == model.Id)
             {
                 var UpdateSp = _mapper.Map<SanPham>(model);
                 _db.SanPham!.Update(UpdateSp);
@@ -53,14 +53,14 @@ namespace shopdecor_api.Repositories.ProductRepositories
         public async Task DeleteProductsAsync(int id)
         {
             var DeleteSp = _db.SanPham!.SingleOrDefault(sp => sp.Id == id);
-            if(DeleteSp != null)
+            if (DeleteSp != null)
             {
                 _db.SanPham!.Remove(DeleteSp);
                 await _db.SaveChangesAsync();
             }
         }
 
-        public async Task AddImageAsync(Hinh hinh) 
+        public async Task AddImageAsync(Hinh hinh)
         {
             _db.Hinh.Add(hinh);
             await _db.SaveChangesAsync();

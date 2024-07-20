@@ -95,7 +95,7 @@ namespace shopdecor_api.Migrations
                     Ten = table.Column<string>(type: "Nvarchar(200)", nullable: true),
                     MoTa = table.Column<string>(type: "Nvarchar(max)", nullable: true),
                     NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TrangThai = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TrangThai = table.Column<bool>(type: "bit", nullable: false),
                     KhuyenMaiMaGiamGia = table.Column<string>(type: "Varchar(20)", nullable: true)
                 },
                 constraints: table =>
@@ -143,7 +143,7 @@ namespace shopdecor_api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TenHinh = table.Column<string>(type: "Varchar(max)", nullable: true),
+                    Link = table.Column<string>(type: "Varchar(max)", nullable: true),
                     SanPhamId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
