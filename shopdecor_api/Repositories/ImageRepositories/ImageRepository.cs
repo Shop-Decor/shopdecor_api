@@ -1,4 +1,5 @@
-﻿using shopdecor_api.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using shopdecor_api.Data;
 using shopdecor_api.Models.Domain;
 
 namespace shopdecor_api.Repositories.ImageRepositories
@@ -21,6 +22,14 @@ namespace shopdecor_api.Repositories.ImageRepositories
             await _db.Hinh.AddAsync(image);
             await _db.SaveChangesAsync();
             return image;
+        }
+
+        public async Task<IEnumerable<Hinh>> RemoveImageByProductAsync(SanPham Product)
+        {
+            var hinhs = await _db.Hinh.Where(x => x.SanPham == Product).ToListAsync();
+            _db.Hinh.RemoveRange(hinhs);
+            await _db.SaveChangesAsync();
+            return hinhs;
         }
     }
 }

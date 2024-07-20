@@ -8,8 +8,8 @@ namespace shopdecor_api.Repositories.ProductRepositories
         public Task<SanPham> GetProductsAsync(int id);
         public Task<SanPham> AddProductsAsync(SanPham model);
 
-        public Task UpdateProductsAsync(int id, SanPham model);
-        public Task DeleteProductsAsync(int id);
+        public Task<SanPham>? UpdateProductsAsync(int id, SanPham model);
+        public Task<SanPham>? DeleteProductsAsync(int id);
         Task AddImageAsync(Hinh hinh);
 
     }

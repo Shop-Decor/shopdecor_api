@@ -28,36 +28,38 @@ namespace shopdecor_api.Repositories.ProductRepositories
 
         public async Task<IEnumerable<SanPham>> GetAllAsync()
         {
-            var Sps = await _db.SanPham!.ToListAsync();
-
-            return _mapper.Map<List<SanPham>>(Sps);
+            return await _db.SanPham.ToListAsync();
         }
 
         public async Task<SanPham> GetProductsAsync(int id)
         {
-            var Sp = await _db.SanPham!.FindAsync(id);
-            return _mapper.Map<SanPham>(Sp);
+            return await _db.SanPham.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task UpdateProductsAsync(int id, SanPham model)
+        public async Task<SanPham>? UpdateProductsAsync(int id, SanPham model)
         {
-            if (id == model.Id)
+            var product = await _db.SanPham.FirstOrDefaultAsync(x => x.Id == id);
+            
+            if(model != null)
             {
-                var UpdateSp = _mapper.Map<SanPham>(model);
-                _db.SanPham!.Update(UpdateSp);
-                await _db.SaveChangesAsync();
-
+                product.Ten = model.Ten;
+                product.MoTa = model.MoTa;
+                product.KhuyenMai = model.KhuyenMai;
+                product.TrangThai = model.TrangThai;
+                
             }
+            
+            await _db.SaveChangesAsync();
+            return product;
         }
 
-        public async Task DeleteProductsAsync(int id)
+        public async Task<SanPham>? DeleteProductsAsync(int id)
         {
-            var DeleteSp = _db.SanPham!.SingleOrDefault(sp => sp.Id == id);
-            if (DeleteSp != null)
-            {
-                _db.SanPham!.Remove(DeleteSp);
-                await _db.SaveChangesAsync();
-            }
+            var product = await _db.SanPham.FirstOrDefaultAsync(x => x.Id == id);
+            if(product != null)
+                product.TrangThai = false;
+            await _db.SaveChangesAsync();
+            return product;
         }
 
         public async Task AddImageAsync(Hinh hinh)
