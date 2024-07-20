@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using shopdecor_api.Data;
 
@@ -11,9 +12,11 @@ using shopdecor_api.Data;
 namespace shopdecor_api.Migrations
 {
     [DbContext(typeof(SeabugDbContext))]
-    partial class SeabugDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240719201638_db")]
+    partial class db
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,9 +55,6 @@ namespace shopdecor_api.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int?>("TaiKhoanId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ThanhTien")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

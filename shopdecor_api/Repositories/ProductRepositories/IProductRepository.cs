@@ -6,11 +6,11 @@ namespace shopdecor_api.Repositories.ProductRepositories
     {
         public Task<IEnumerable<SanPham>> GetAllAsync();
         public Task<SanPham> GetProductsAsync(int id);
-        public Task<int> AddProductsAsync(SanPham model);
+        public Task<SanPham> AddProductsAsync(SanPham model);
 
-        public Task UpdateProductsAsync(int id,SanPham model);
+        public Task UpdateProductsAsync(int id, SanPham model);
         public Task DeleteProductsAsync(int id);
-        Task AddImageAsync(Hinh hinh); 
+        Task AddImageAsync(Hinh hinh);
 
     }
 }
