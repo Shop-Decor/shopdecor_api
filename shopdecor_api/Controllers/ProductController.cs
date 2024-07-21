@@ -8,8 +8,9 @@ using shopdecor_api.Repositories.ProductRepositories;
 
 namespace shopdecor_api.Controllers
 {
-    [ApiController]
+
     [Route("api/[controller]")]
+    [ApiController]
     public class ProductController : Controller
     {
         private readonly IProductRepository _productRepository;

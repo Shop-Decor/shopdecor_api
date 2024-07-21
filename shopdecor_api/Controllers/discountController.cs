@@ -6,6 +6,7 @@ using shopdecor_api.Repositories.DiscountRepositories;
 
 namespace shopdecor_api.Controllers
 {
+
     [Route("api/[Controller]")]
     [ApiController]
     public class discountController : Controller
