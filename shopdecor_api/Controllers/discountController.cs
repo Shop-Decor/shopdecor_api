@@ -2,6 +2,7 @@
 
 namespace shopdecor_api.Controllers
 {
+
     public class discountController : Controller
     {
         public IActionResult Index()
