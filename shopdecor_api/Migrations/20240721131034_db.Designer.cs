@@ -12,8 +12,8 @@ using shopdecor_api.Data;
 namespace shopdecor_api.Migrations
 {
     [DbContext(typeof(SeabugDbContext))]
-    [Migration("20240720132842_addalltodb")]
-    partial class addalltodb
+    [Migration("20240721131034_db")]
+    partial class db
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
