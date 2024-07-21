@@ -1,8 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Data;
 using shopdecor_api.Repositories.Category_SizeRepositories;
 using shopdecor_api.Repositories.CategoryColorRepositories;
 using shopdecor_api.Repositories.CategoryRepositories;
+using shopdecor_api.Repositories.BillRepositories;
+using shopdecor_api.Repositories.DiscountRepositories;
+using shopdecor_api.Repositories.ImageRepositories;
 using shopdecor_api.Repositories.ProductRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,8 +32,12 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepnsitetory, CategoryRepositetory>();
 builder.Services.AddScoped<ICategory_SizeRepositories, Category_SizeRepositories>();
 builder.Services.AddScoped<ICategoryColorRepositories, CategoryColorRepositories>();
-
+builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+builder.Services.AddScoped<IBillRepository, BillRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+
 
 var app = builder.Build();
 

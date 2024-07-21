@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using shopdecor_api.Models.Domain;
+using shopdecor_api.Models.DTO.ProductDTO;
+using shopdecor_api.Repositories.DiscountRepositories;
+using shopdecor_api.Repositories.ImageRepositories;
 using shopdecor_api.Repositories.ProductRepositories;
 
 namespace shopdecor_api.Controllers
@@ -9,16 +14,138 @@ namespace shopdecor_api.Controllers
     public class ProductController : Controller
     {
         private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
+        private readonly IDiscountRepository _discountRepository;
+        private readonly IImageRepository _imageRepository;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductRepository productRepository, IMapper mapper, IDiscountRepository discountRepository, IImageRepository imageRepository)
         {
             _productRepository = productRepository;
+            _mapper = mapper;
+            _discountRepository = discountRepository;
+            _imageRepository = imageRepository;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllProducts()
         {
-            var products = await _productRepository.GetAllAsync();
-            return Ok(products);
+            var product = await _productRepository.GetAllAsync();
+            var map = _mapper.Map<List<IndexProductRequest>>(product);
+            return Ok(map);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProductsbyId(int id)
+        {
+            var product = await _productRepository.GetProductsAsync(id);
+            var maps = _mapper.Map<IndexProductRequest>(product);
+            return Ok(maps);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddNewProducts([FromBody] AddProductRequest model)
+        {
+            try
+            {
+                var productDTO = _mapper.Map<SanPham>(model);
+                if (model.MaGiamGia != null)
+                {
+                    var discount = await _discountRepository.GetAsync(model.MaGiamGia);
+                    productDTO.KhuyenMai = discount;
+                }
+                var product = await _productRepository.AddProductsAsync(productDTO);
+                if (model.Img.Count() > 0)
+                {
+                    foreach (var item in model.Img)
+                    {
+                        await _imageRepository.AddImageByProductAsync(item, product);
+                    }
+                }
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProduct(int id,[FromBody]UpdateProductRequest updateProductRequest)
+        {
+            var map = _mapper.Map<SanPham>(updateProductRequest);
+            var productupdate = await _productRepository.UpdateProductsAsync(id,map);
+            if(productupdate == null)
+            {
+                return NotFound();
+            }
+            if (updateProductRequest.MaGiamGia != null)
+            {
+                var discount = await _discountRepository.GetAsync(updateProductRequest.MaGiamGia);
+                productupdate.KhuyenMai = discount;
+            }
+            if (updateProductRequest.Imgs.Count() > 0)
+            {
+                await _imageRepository.RemoveImageByProductAsync(productupdate);
+                foreach (var item in updateProductRequest.Imgs)
+                {
+                    await _imageRepository.AddImageByProductAsync(item, productupdate);
+                }
+
+            }
+            return Ok(productupdate);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var delProduct = await _productRepository.DeleteProductsAsync(id);
+            if (delProduct != null)
+                delProduct.TrangThai = false;
+            return NoContent();
+
+            
+        }
+
+        //[HttpPost("{id}/upload-images")]
+        //public async Task<IActionResult> UploadImages(int id, List<IFormFile> files)
+        //{
+        //    if (files == null || files.Count == 0)
+        //    {
+        //        return BadRequest("No files uploaded.");
+        //    }
+        //    var product = await _productRepository.GetProductsAsync(id);
+        //    if (product == null)
+        //    {
+        //        return NotFound("product not found.");
+        //    }
+        //    try
+        //    {
+        //        foreach (var file in files)
+        //        {
+        //            if (file.Length > 0)
+        //            {
+        //                var filePath = Path.Combine("Images", file.FileName);
+
+        //                using (var stream = new FileStream(filePath, FileMode.Create))
+        //                {
+        //                    await file.CopyToAsync(stream);
+        //                }
+
+        //                var hinh = new Hinh
+        //                {
+        //                    TenHinh = file.FileName,
+        //                    SanPham = product
+        //                };
+
+        //                await _productRepository.AddImageAsync(hinh);
+        //            }
+        //        }
+
+        //        return Ok("Thành công");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
+
     }
 }
+
+

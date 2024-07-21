@@ -54,6 +54,9 @@ namespace shopdecor_api.Migrations
                     b.Property<int?>("TaiKhoanId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ThanhTien")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("KhuyenMaiMaGiamGia");
@@ -100,11 +103,11 @@ namespace shopdecor_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Link")
+                        .HasColumnType("Varchar(max)");
+
                     b.Property<int?>("SanPhamId")
                         .HasColumnType("int");
-
-                    b.Property<string>("TenHinh")
-                        .HasColumnType("Varchar(max)");
 
                     b.HasKey("Id");
 
@@ -142,7 +145,10 @@ namespace shopdecor_api.Migrations
                     b.Property<DateTime>("HSD")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("LoaiGiam")
+                    b.Property<bool>("LoaiGiam")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LoaiKM")
                         .HasColumnType("bit");
 
                     b.Property<int>("MenhGia")
@@ -227,8 +233,8 @@ namespace shopdecor_api.Migrations
                     b.Property<string>("Ten")
                         .HasColumnType("Nvarchar(200)");
 
-                    b.Property<string>("TrangThai")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("TrangThai")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

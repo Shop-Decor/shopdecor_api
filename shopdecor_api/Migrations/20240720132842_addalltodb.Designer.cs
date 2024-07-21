@@ -12,8 +12,8 @@ using shopdecor_api.Data;
 namespace shopdecor_api.Migrations
 {
     [DbContext(typeof(SeabugDbContext))]
-    [Migration("20240713173225_Db1")]
-    partial class Db1
+    [Migration("20240720132842_addalltodb")]
+    partial class addalltodb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,9 @@ namespace shopdecor_api.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -52,6 +55,9 @@ namespace shopdecor_api.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int?>("TaiKhoanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ThanhTien")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -100,14 +106,11 @@ namespace shopdecor_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("IdSanPham")
-                        .HasColumnType("int");
+                    b.Property<string>("Link")
+                        .HasColumnType("Varchar(max)");
 
                     b.Property<int?>("SanPhamId")
                         .HasColumnType("int");
-
-                    b.Property<string>("TenHinh")
-                        .HasColumnType("Varchar(max)");
 
                     b.HasKey("Id");
 
@@ -145,7 +148,10 @@ namespace shopdecor_api.Migrations
                     b.Property<DateTime>("HSD")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("LoaiGiam")
+                    b.Property<bool>("LoaiGiam")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LoaiKM")
                         .HasColumnType("bit");
 
                     b.Property<int>("MenhGia")
@@ -230,8 +236,8 @@ namespace shopdecor_api.Migrations
                     b.Property<string>("Ten")
                         .HasColumnType("Nvarchar(200)");
 
-                    b.Property<string>("TrangThai")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("TrangThai")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

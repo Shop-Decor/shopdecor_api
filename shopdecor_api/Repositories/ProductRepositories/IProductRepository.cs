@@ -4,6 +4,13 @@ namespace shopdecor_api.Repositories.ProductRepositories
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<SanPham>> GetAllAsync();
+        public Task<IEnumerable<SanPham>> GetAllAsync();
+        public Task<SanPham> GetProductsAsync(int id);
+        public Task<SanPham> AddProductsAsync(SanPham model);
+
+        public Task<SanPham>? UpdateProductsAsync(int id, SanPham model);
+        public Task<SanPham>? DeleteProductsAsync(int id);
+        Task AddImageAsync(Hinh hinh);
+
     }
 }

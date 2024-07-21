@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace shopdecor_api.Migrations
 {
     /// <inheritdoc />
-    public partial class Db : Migration
+    public partial class addalltodb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,10 +17,11 @@ namespace shopdecor_api.Migrations
                 {
                     MaGiamGia = table.Column<string>(type: "Varchar(20)", nullable: false),
                     MoTa = table.Column<string>(type: "Nvarchar(max)", nullable: true),
-                    LoaiGiam = table.Column<bool>(type: "bit", nullable: true),
+                    LoaiGiam = table.Column<bool>(type: "bit", nullable: false),
                     MenhGia = table.Column<int>(type: "int", nullable: false),
                     NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HSD = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    HSD = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LoaiKM = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -94,8 +95,7 @@ namespace shopdecor_api.Migrations
                     Ten = table.Column<string>(type: "Nvarchar(200)", nullable: true),
                     MoTa = table.Column<string>(type: "Nvarchar(max)", nullable: true),
                     NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdKhuyenMai = table.Column<string>(type: "Varchar(20)", nullable: false),
-                    TrangThai = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TrangThai = table.Column<bool>(type: "bit", nullable: false),
                     KhuyenMaiMaGiamGia = table.Column<string>(type: "Varchar(20)", nullable: true)
                 },
                 constraints: table =>
@@ -114,11 +114,10 @@ namespace shopdecor_api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdTaiKhoan = table.Column<int>(type: "int", nullable: false),
-                    IdKhuyenMai = table.Column<int>(type: "int", nullable: false),
                     NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NgayHuy = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LyDoHuy = table.Column<string>(type: "Nvarchar(max)", nullable: true),
+                    ThanhTien = table.Column<int>(type: "int", nullable: false),
                     TTDonHang = table.Column<byte>(type: "tinyint", nullable: false),
                     TTThanhToan = table.Column<bool>(type: "bit", nullable: false),
                     TaiKhoanId = table.Column<int>(type: "int", nullable: true),
@@ -145,8 +144,7 @@ namespace shopdecor_api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TenHinh = table.Column<string>(type: "Varchar(max)", nullable: true),
-                    IdSanPham = table.Column<int>(type: "int", nullable: false),
+                    Link = table.Column<string>(type: "Varchar(max)", nullable: true),
                     SanPhamId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -165,9 +163,6 @@ namespace shopdecor_api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdKichThuoc = table.Column<int>(type: "int", nullable: false),
-                    IdMauSac = table.Column<int>(type: "int", nullable: false),
-                    IdSanPham = table.Column<int>(type: "int", nullable: false),
                     Gia = table.Column<int>(type: "int", nullable: false),
                     SoLuong = table.Column<int>(type: "int", nullable: false),
                     KichThuocId = table.Column<int>(type: "int", nullable: true),
@@ -200,8 +195,6 @@ namespace shopdecor_api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdSanPham = table.Column<int>(type: "int", nullable: false),
-                    IdLoai = table.Column<int>(type: "int", nullable: false),
                     LoaiSPId = table.Column<int>(type: "int", nullable: true),
                     SanPhamId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -226,8 +219,6 @@ namespace shopdecor_api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdSanPham = table.Column<int>(type: "int", nullable: false),
-                    IdDonHang = table.Column<int>(type: "int", nullable: false),
                     SoLuong = table.Column<int>(type: "int", nullable: false),
                     GiaSP = table.Column<int>(type: "int", nullable: false),
                     SanPhamId = table.Column<int>(type: "int", nullable: true),
@@ -255,7 +246,6 @@ namespace shopdecor_api.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NgayXuatHD = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdDonHang = table.Column<int>(type: "int", nullable: false),
                     DonHangId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
