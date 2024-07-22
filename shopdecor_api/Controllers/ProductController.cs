@@ -66,11 +66,11 @@ namespace shopdecor_api.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id,[FromBody]UpdateProductRequest updateProductRequest)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductRequest updateProductRequest)
         {
             var map = _mapper.Map<SanPham>(updateProductRequest);
-            var productupdate = await _productRepository.UpdateProductsAsync(id,map);
-            if(productupdate == null)
+            var productupdate = await _productRepository.UpdateProductsAsync(id, map);
+            if (productupdate == null)
             {
                 return NotFound();
             }
@@ -99,51 +99,14 @@ namespace shopdecor_api.Controllers
                 delProduct.TrangThai = false;
             return NoContent();
 
-            
+
         }
 
-        //[HttpPost("{id}/upload-images")]
-        //public async Task<IActionResult> UploadImages(int id, List<IFormFile> files)
-        //{
-        //    if (files == null || files.Count == 0)
-        //    {
-        //        return BadRequest("No files uploaded.");
-        //    }
-        //    var product = await _productRepository.GetProductsAsync(id);
-        //    if (product == null)
-        //    {
-        //        return NotFound("product not found.");
-        //    }
-        //    try
-        //    {
-        //        foreach (var file in files)
-        //        {
-        //            if (file.Length > 0)
-        //            {
-        //                var filePath = Path.Combine("Images", file.FileName);
-
-        //                using (var stream = new FileStream(filePath, FileMode.Create))
-        //                {
-        //                    await file.CopyToAsync(stream);
-        //                }
-
-        //                var hinh = new Hinh
-        //                {
-        //                    TenHinh = file.FileName,
-        //                    SanPham = product
-        //                };
-
-        //                await _productRepository.AddImageAsync(hinh);
-        //            }
-        //        }
-
-        //        return Ok("Thành công");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+        [HttpGet("User")]
+        public async Task<IActionResult> GetAllUserProducts()
+        {
+            return Ok();
+        }
 
     }
 }
