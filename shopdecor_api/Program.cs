@@ -39,8 +39,6 @@ builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<IProductDetailsRepositories, ProductDetailsRepositories>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
-
-
 var app = builder.Build();
 
 app.UseCors(builder =>
