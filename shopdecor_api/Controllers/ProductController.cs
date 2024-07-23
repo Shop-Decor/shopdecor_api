@@ -65,30 +65,47 @@ namespace shopdecor_api.Controllers
                 return BadRequest(ex);
             }
         }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductRequest updateProductRequest)
         {
-            var map = _mapper.Map<SanPham>(updateProductRequest);
-            var productupdate = await _productRepository.UpdateProductsAsync(id, map);
-            if (productupdate == null)
+            try
             {
-                return NotFound();
-            }
-            if (updateProductRequest.MaGiamGia != null)
-            {
-                var discount = await _discountRepository.GetAsync(updateProductRequest.MaGiamGia);
-                productupdate.KhuyenMai = discount;
-            }
-            if (updateProductRequest.Imgs.Count() > 0)
-            {
-                await _imageRepository.RemoveImageByProductAsync(productupdate);
-                foreach (var item in updateProductRequest.Imgs)
+                if (updateProductRequest == null)
                 {
-                    await _imageRepository.AddImageByProductAsync(item, productupdate);
+                    return BadRequest("Dữ liệu yêu cầu không hợp lệ.");
                 }
 
+                var map = _mapper.Map<SanPham>(updateProductRequest);
+                var productupdate = await _productRepository.UpdateProductsAsync(id, map);
+
+                if (productupdate == null)
+                {
+                    return NotFound("Sản phẩm không tồn tại.");
+                }
+
+                if (updateProductRequest.MaGiamGia != null)
+                {
+                    var discount = await _discountRepository.GetAsync(updateProductRequest.MaGiamGia);
+                    productupdate.KhuyenMai = discount;
+                }
+
+                if (updateProductRequest.Imgs != null && updateProductRequest.Imgs.Any())
+                {
+                    await _imageRepository.RemoveImageByProductAsync(productupdate);
+                    foreach (var item in updateProductRequest.Imgs)
+                    {
+                        await _imageRepository.AddImageByProductAsync(item, productupdate);
+                    }
+                }
+
+                return Ok(productupdate);
             }
-            return Ok(productupdate);
+            catch (Exception ex)
+            {
+                // Ghi log lỗi hoặc xử lý chi tiết lỗi
+                return BadRequest(new { message = "Có lỗi xảy ra khi xử lý yêu cầu.", details = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
@@ -105,7 +122,9 @@ namespace shopdecor_api.Controllers
         [HttpGet("User")]
         public async Task<IActionResult> GetAllUserProducts()
         {
-            return Ok();
+            var product = await _productRepository.GetAllAsync();
+            var map = _mapper.Map<List<GetUserProduct>>(product);
+            return Ok(map);
         }
 
     }

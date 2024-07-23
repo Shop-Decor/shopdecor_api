@@ -8,6 +8,7 @@
         public bool TrangThai { get; set; }
         public string? Hinh { get; set; }
         public int gia { get; set; }
+        public List<int>? Colors { get; set; }
 
     }
 }
