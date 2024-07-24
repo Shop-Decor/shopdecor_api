@@ -94,12 +94,11 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-app.UseCors(builder =>
+app.UseCors(options =>
 {
-    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
 });
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -108,7 +107,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication(); // Ensure Authentication is enabled
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

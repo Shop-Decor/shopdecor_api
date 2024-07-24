@@ -65,13 +65,11 @@ namespace shopdecor_api.Repositories.AccountRepositories
 
         public async Task<IdentityResult> SignUpAsync(SignUpModel model)
         {
-            //new user 
             var user = new ApplicationUser
             {
                 FullName = model.FullName,
-               
                 Email = model.Email,
-                UserName = model.Email
+                UserName = model.UserName
             };
             var result = await userManager.CreateAsync(user, model.Password);
 
@@ -118,7 +116,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
             }
             catch
             {
-                // Log error or handle it as needed
+                
             }
 
             return null;
@@ -139,6 +137,76 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 user.Email,
                 Roles = roles
             };
+        }
+
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
+        {
+            // Lấy tất cả người dùng từ UserManager
+            var users = userManager.Users.ToList();
+            return await Task.FromResult(users);
+        }
+
+
+
+        public async Task<IdentityResult> CreateUser(CreateAccount account)
+        {
+            var user = new ApplicationUser
+            {
+                FullName = account.FullName,
+                Email = account.Email,
+                UserName = account.UserName,
+                Address = account.Address,
+                PhoneNumber = account.PhoneNumber,
+            };
+            var result = await userManager.CreateAsync(user, account.Password);
+
+            //kiểm tra 
+            if (result.Succeeded)
+            {
+                //kiểm tra role Customer đã có hay chưa
+                if (!await roleManager.RoleExistsAsync(AppRole.Admin))
+                {
+                    // nếu chưa -> tạo role mới 
+                    await roleManager.CreateAsync(new IdentityRole(AppRole.Admin));
+                }
+
+                // dã có thì add role cho tk 
+                await userManager.AddToRoleAsync(user, AppRole.Admin);
+            }
+            return result;
+        }
+
+        public async Task<IdentityResult> UpdateUser(CreateAccount account, string Id)
+        {
+
+
+            var user = await userManager.FindByIdAsync(Id);
+
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+            }
+
+            user.FullName = account.FullName;
+            user.Email = account.Email;
+            user.PhoneNumber = account.PhoneNumber;
+            user.Address = account.Address;
+
+            var result = await userManager.UpdateAsync(user);
+            return result;
+        }
+       
+
+        public async Task<IdentityResult> DeleteUser(string ID)
+        {
+            var user = await userManager.FindByIdAsync(ID);
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+            }
+            user.Status = false;
+            var result = await userManager.UpdateAsync(user);
+            return result;
         }
     }
 

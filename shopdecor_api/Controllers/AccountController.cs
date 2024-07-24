@@ -18,6 +18,7 @@ namespace shopdecor_api.Controllers
     {
         private readonly IAccountRepository accountRepo;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IConfiguration configuration;
         public AccountController(IAccountRepository repo)
         {
             accountRepo = repo;
@@ -45,31 +46,100 @@ namespace shopdecor_api.Controllers
             }
 
             return Ok(new { Token = result });
+        
+        }
+      
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create([FromBody] CreateAccount account)
+        {
+            var result = await accountRepo.CreateUser(account);
+
+            if (result.Succeeded)
+            {
+
+                return Ok(result.Succeeded);
+            }
+
+            return Ok(new { Token = result });
         }
 
-        [HttpGet("GetUser")]
-        public async Task<IActionResult> GetUser([FromQuery] string token)
+        [HttpPut("Update")]
+
+        public async Task<IActionResult> Update([FromBody] CreateAccount account, string Id)
         {
-            if (string.IsNullOrEmpty(token))
+            var result = await accountRepo.UpdateUser(account,Id);
+
+            if (result.Succeeded)
             {
-                return BadRequest("Token is required.");
+
+                return Ok(result.Succeeded);
             }
 
-            var user = ValidateTokenAndGetUser(token); // This method needs to be implemented
-            if (user == null)
+            return Ok(new { Token = result });
+
+        }
+
+        [HttpGet("Get")]
+        public async Task<IActionResult> Get()
+        {
+            
+            // Fetch all users (assuming the user has the right permissions)
+            var users = await accountRepo.GetAllUsersAsync();
+
+            if (users == null || !users.Any())
             {
-                return Unauthorized("Invalid token.");
+                return NotFound("No users found.");
             }
 
-            var roles = await userManager.GetRolesAsync(user);
+            return Ok(users);
+        }
 
-            var userDto = new
+        private async Task<ApplicationUser> ValidateTokenAndGetUserAsync(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(configuration["JWT:Secret"]);
+
+            try
             {
-                user.Email,
-                Roles = roles
-            };
+                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration["JWT:ValidIssuer"],
+                    ValidAudience = configuration["JWT:ValidAudience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                }, out SecurityToken validatedToken);
 
-            return Ok(userDto);
+                var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (userId != null)
+                {
+                    return await userManager.FindByIdAsync(userId);
+                }
+            }
+            catch
+            {
+                // Handle the exception as needed
+            }
+
+            return null;
+        }
+
+        [HttpPut("Delete")]
+        public async Task<IActionResult> Delete(string Id)
+        {
+            var result = await accountRepo.DeleteUser( Id);
+
+            if (result.Succeeded)
+            {
+
+                return Ok(result.Succeeded);
+            }
+
+            return Ok(new { Token = result });
         }
 
 
