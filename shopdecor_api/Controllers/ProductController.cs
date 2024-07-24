@@ -8,8 +8,9 @@ using shopdecor_api.Repositories.ProductRepositories;
 
 namespace shopdecor_api.Controllers
 {
-    [ApiController]
+
     [Route("api/[controller]")]
+    [ApiController]
     public class ProductController : Controller
     {
         private readonly IProductRepository _productRepository;
@@ -64,30 +65,47 @@ namespace shopdecor_api.Controllers
                 return BadRequest(ex);
             }
         }
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id,[FromBody]UpdateProductRequest updateProductRequest)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductRequest updateProductRequest)
         {
-            var map = _mapper.Map<SanPham>(updateProductRequest);
-            var productupdate = await _productRepository.UpdateProductsAsync(id,map);
-            if(productupdate == null)
+            try
             {
-                return NotFound();
-            }
-            if (updateProductRequest.MaGiamGia != null)
-            {
-                var discount = await _discountRepository.GetAsync(updateProductRequest.MaGiamGia);
-                productupdate.KhuyenMai = discount;
-            }
-            if (updateProductRequest.Imgs.Count() > 0)
-            {
-                await _imageRepository.RemoveImageByProductAsync(productupdate);
-                foreach (var item in updateProductRequest.Imgs)
+                if (updateProductRequest == null)
                 {
-                    await _imageRepository.AddImageByProductAsync(item, productupdate);
+                    return BadRequest("Dữ liệu yêu cầu không hợp lệ.");
                 }
 
+                var map = _mapper.Map<SanPham>(updateProductRequest);
+                var productupdate = await _productRepository.UpdateProductsAsync(id, map);
+
+                if (productupdate == null)
+                {
+                    return NotFound("Sản phẩm không tồn tại.");
+                }
+
+                if (updateProductRequest.MaGiamGia != null)
+                {
+                    var discount = await _discountRepository.GetAsync(updateProductRequest.MaGiamGia);
+                    productupdate.KhuyenMai = discount;
+                }
+
+                if (updateProductRequest.Imgs != null && updateProductRequest.Imgs.Any())
+                {
+                    await _imageRepository.RemoveImageByProductAsync(productupdate);
+                    foreach (var item in updateProductRequest.Imgs)
+                    {
+                        await _imageRepository.AddImageByProductAsync(item, productupdate);
+                    }
+                }
+
+                return Ok(productupdate);
             }
-            return Ok(productupdate);
+            catch (Exception ex)
+            {
+                // Ghi log lỗi hoặc xử lý chi tiết lỗi
+                return BadRequest(new { message = "Có lỗi xảy ra khi xử lý yêu cầu.", details = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
@@ -98,51 +116,16 @@ namespace shopdecor_api.Controllers
                 delProduct.TrangThai = false;
             return NoContent();
 
-            
+
         }
 
-        //[HttpPost("{id}/upload-images")]
-        //public async Task<IActionResult> UploadImages(int id, List<IFormFile> files)
-        //{
-        //    if (files == null || files.Count == 0)
-        //    {
-        //        return BadRequest("No files uploaded.");
-        //    }
-        //    var product = await _productRepository.GetProductsAsync(id);
-        //    if (product == null)
-        //    {
-        //        return NotFound("product not found.");
-        //    }
-        //    try
-        //    {
-        //        foreach (var file in files)
-        //        {
-        //            if (file.Length > 0)
-        //            {
-        //                var filePath = Path.Combine("Images", file.FileName);
-
-        //                using (var stream = new FileStream(filePath, FileMode.Create))
-        //                {
-        //                    await file.CopyToAsync(stream);
-        //                }
-
-        //                var hinh = new Hinh
-        //                {
-        //                    TenHinh = file.FileName,
-        //                    SanPham = product
-        //                };
-
-        //                await _productRepository.AddImageAsync(hinh);
-        //            }
-        //        }
-
-        //        return Ok("Thành công");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+        [HttpGet("User")]
+        public async Task<IActionResult> GetAllUserProducts()
+        {
+            var product = await _productRepository.GetAllAsync();
+            var map = _mapper.Map<List<GetUserProduct>>(product);
+            return Ok(map);
+        }
 
     }
 }

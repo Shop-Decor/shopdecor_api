@@ -6,6 +6,7 @@ using shopdecor_api.Repositories.DiscountRepositories;
 
 namespace shopdecor_api.Controllers
 {
+
     [Route("api/[Controller]")]
     [ApiController]
     public class discountController : Controller
@@ -24,6 +25,7 @@ namespace shopdecor_api.Controllers
 
             var Discount = await _discountRepository.GetAllAsync();
             var Map = _mapper.Map<List<IndexDiscountDTO>>(Discount);
+
             return Ok(Map);
         }
         [HttpGet("{maGiamGia}")]
@@ -38,9 +40,10 @@ namespace shopdecor_api.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> AddAsycn([FromBody] IndexDiscountDTO indexDiscountDTO)
+        public async Task<IActionResult> AddAsycn([FromBody] AddDiscountDTO addDiscountDTO)
         {
-            var Discount = _mapper.Map<KhuyenMai>(indexDiscountDTO);
+
+            var Discount = _mapper.Map<KhuyenMai>(addDiscountDTO);
             var DiscountCreate = await _discountRepository.AddAsync(Discount);
             
             return Ok(DiscountCreate);

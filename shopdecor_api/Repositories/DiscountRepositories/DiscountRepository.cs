@@ -44,7 +44,6 @@ namespace shopdecor_api.Repositories.DiscountRepositories
                 discountExist.MenhGia = khuyenMai.MenhGia;
                 discountExist.LoaiGiam = khuyenMai.LoaiGiam;
                 discountExist.MoTa = khuyenMai.MoTa;
-                discountExist.NgayTao = khuyenMai.NgayTao;
                 discountExist.HSD = khuyenMai.HSD;
                 discountExist.LoaiKM = khuyenMai.LoaiKM;
                 await _context.SaveChangesAsync();
