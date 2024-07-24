@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Models.Domain;
 
 namespace shopdecor_api.Data
 {
-    public class SeabugDbContext : DbContext
+    public class SeabugDbContext : IdentityDbContext<ApplicationUser>
     {
         public SeabugDbContext(DbContextOptions<SeabugDbContext> options) : base(options)
         {
