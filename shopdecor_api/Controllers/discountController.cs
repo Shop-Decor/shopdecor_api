@@ -34,7 +34,7 @@ namespace shopdecor_api.Controllers
             if (await _discountRepository.DiscountExist(maGiamGia))
                 return NotFound();
             var Discount = _mapper.Map<IndexDiscountDTO>(_discountRepository.GetAsync(maGiamGia));
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             return Ok(Discount);
 
@@ -45,22 +45,38 @@ namespace shopdecor_api.Controllers
 
             var Discount = _mapper.Map<KhuyenMai>(addDiscountDTO);
             var DiscountCreate = await _discountRepository.AddAsync(Discount);
-            
             return Ok(DiscountCreate);
 
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateAsycn([FromBody]UpdateDiscountDTO update,string maGiamGia)
+        public async Task<IActionResult> UpdateAsycn([FromBody] UpdateDiscountDTO update, string maGiamGia)
         {
             var map = _mapper.Map<KhuyenMai>(update);
             var DiscountUpdate = await _discountRepository.UpdateAsync(map, maGiamGia);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            if(DiscountUpdate == null)
+            if (DiscountUpdate == null)
             {
                 return NotFound();
-            }  
+            }
             return NoContent();
         }
+        [HttpDelete("{maGiamGia}")]
+        public async Task<IActionResult> DeleteAsync(string maGiamGia)
+        {
+            var discountDelete = await _discountRepository.DeleteAsync(maGiamGia);
+            if (discountDelete == null)
+                return NotFound();
+            if (!ModelState.IsValid)
+                return BadRequest();
+            return Ok(discountDelete);
+        }
+        [HttpGet("discountExist")]
+        public async Task<IActionResult> DiscountExist(string maGiamGia)
+        {
+            var discountExist = await _discountRepository.DiscountExist(maGiamGia);
+            return Ok(discountExist);
+        }
+
     }
 }
