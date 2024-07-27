@@ -1,6 +1,4 @@
 ﻿using shopdecor_api.Models.Domain;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace shopdecor_api.Repositories.ProductDetailsRepositories
 {
@@ -11,6 +9,7 @@ namespace shopdecor_api.Repositories.ProductDetailsRepositories
         Task AddAsync(SanPham_ChiTiet productDetail);
         Task UpdateAsync(SanPham_ChiTiet productDetail);
         Task DeleteAsync(int id);
+        //Task<SanPham_ChiTiet> GetProductsDetailbyproduct(int SpId);
     }
 
 }

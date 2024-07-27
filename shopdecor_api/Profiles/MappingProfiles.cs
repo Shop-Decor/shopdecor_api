@@ -22,6 +22,8 @@ namespace shopdecor_api.Profiles
             CreateMap<SanPham, UpdateProductRequest>().ReverseMap();
 
             CreateMap<SanPham_ChiTiet, DTODetails>().ReverseMap();
+
+
         }
     }
 }

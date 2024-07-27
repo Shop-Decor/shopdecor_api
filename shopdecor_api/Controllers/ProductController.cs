@@ -127,6 +127,12 @@ namespace shopdecor_api.Controllers
             return Ok(map);
         }
 
+        [HttpGet("getproductdetail")]
+        public async Task<IActionResult> getproductdetailbyproduct(int spid)
+        {
+            var product = await _productRepository.GetProductDetail(spid);
+            return Ok(product);
+        }
     }
 }
 
