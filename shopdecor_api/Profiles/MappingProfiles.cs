@@ -18,7 +18,12 @@ namespace shopdecor_api.Profiles
             CreateMap<SanPham, GetUserProduct>()
             .ForMember(dest => dest.ColorName, opt => opt.MapFrom(src => src.SanPham_ChiTiets.Select(ct => ct.MauSac.TenMauSac).Distinct().ToList()))
             .ForMember(dest => dest.Hinh, opt => opt.MapFrom(src => src.Hinhs.FirstOrDefault().Link))
-            .ForMember(dest => dest.gia, opt => opt.MapFrom(src => src.SanPham_ChiTiets.Any() ? src.SanPham_ChiTiets.Min(s => s.Gia) : 0)).ReverseMap();
+            .ForMember(dest => dest.gia, opt => opt.MapFrom(src => src.SanPham_ChiTiets.Any() ? src.SanPham_ChiTiets.Min(s => s.Gia) : 0))
+            .ForMember(dest => dest.LoaiGiam, opt => opt.MapFrom(x => x.KhuyenMai.LoaiGiam))
+            .ForMember(dest => dest.MenhGia, opt => opt.MapFrom(x => x.KhuyenMai.MenhGia))
+            .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.SanPham_ChiTiets.OrderBy(s => s.Gia).Select(s => s.KichThuoc.TenKichThuoc).FirstOrDefault()))
+            .ForMember(dest => dest.SoLuong, opt => opt.MapFrom(src => src.SanPham_ChiTiets.OrderBy(s => s.Gia).Select(x => x.SoLuong).FirstOrDefault()))
+            .ReverseMap();
             CreateMap<SanPham, UpdateProductRequest>().ReverseMap();
 
             CreateMap<SanPham_ChiTiet, DTODetails>().ReverseMap();
