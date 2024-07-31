@@ -1,6 +1,4 @@
 ﻿using shopdecor_api.Models.Domain;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace shopdecor_api.Repositories.ProductDetailsRepositories
 {
