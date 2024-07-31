@@ -89,6 +89,7 @@ namespace shopdecor_api.Controllers
             await _repository.DeleteAsync(id);
             return Ok();
         }
+        
     }
 }
 

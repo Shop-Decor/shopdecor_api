@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public string? Ten { get; set; }
         //1:đang bán, 0:ngừng bán
-        public bool TrangThai { get; set; }
+        public DateTime NgayTao { get; set; }
         public string? Hinh { get; set; }
         public int gia { get; set; }
         public List<string>? ColorName { get; set; }
@@ -15,6 +15,7 @@
         public int MenhGia { get; set; }
         public string? Size { get; set; }
         public int SoLuong { get; set; }
+        
 
     }
 }

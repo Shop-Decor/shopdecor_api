@@ -10,6 +10,7 @@ namespace shopdecor_api.Repositories.ProductDetailsRepositories
         Task UpdateAsync(SanPham_ChiTiet productDetail);
         Task DeleteAsync(int id);
         //Task<SanPham_ChiTiet> GetProductsDetailbyproduct(int SpId);
+
     }
 
 }
