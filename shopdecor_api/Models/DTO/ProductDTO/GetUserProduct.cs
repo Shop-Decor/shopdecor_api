@@ -9,9 +9,11 @@
         public string? Hinh { get; set; }
         public int gia { get; set; }
         public List<string>? ColorName { get; set; }
+        public string? Color { get; set; }
+        public string? MaGiamGia { get; set; }
         public bool LoaiGiam { get; set; }
         public int MenhGia { get; set; }
-        public string Size { get; set; }
+        public string? Size { get; set; }
         public int SoLuong { get; set; }
 
     }
