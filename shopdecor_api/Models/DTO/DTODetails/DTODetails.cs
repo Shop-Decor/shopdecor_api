@@ -7,6 +7,5 @@
         public int SoLuong { get; set; }
         public string? Size { get; set; }
         public string? Color { get; set; }
-
     }
 }
