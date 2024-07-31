@@ -11,6 +11,9 @@ namespace shopdecor_api.Repositories.ProductRepositories
         public Task<SanPham>? UpdateProductsAsync(int id, SanPham model);
         public Task<SanPham>? DeleteProductsAsync(int id);
         Task AddImageAsync(Hinh hinh);
+        public Task<List<ProductDetail>> GetProductDetail(int SpId);
 
+        
+        
     }
 }

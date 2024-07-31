@@ -4,7 +4,7 @@ using shopdecor_api.Models.Domain;
 
 namespace shopdecor_api.Repositories.CategoryRepositories
 {
-	public class CategoryRepositetory : ICategoryRepnsitetory
+    public class CategoryRepositetory : ICategoryRepnsitetory
 	{
 		private readonly SeabugDbContext _db;
 
@@ -52,6 +52,7 @@ namespace shopdecor_api.Repositories.CategoryRepositories
 			return loaisp;
 		}
 
-		
-	}
+        
+
+    }
 }

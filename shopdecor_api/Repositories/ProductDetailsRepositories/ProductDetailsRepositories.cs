@@ -84,4 +84,5 @@ public class ProductDetailsRepositories : IProductDetailsRepositories
     {
         return await _context.SanPham_ChiTiet.Where(x => x.SanPham.Id == SpId).ToListAsync();
     }
+
 }

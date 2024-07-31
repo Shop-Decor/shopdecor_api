@@ -77,6 +77,7 @@ namespace shopdecor_api.Controllers
             var discountExist = await _discountRepository.DiscountExist(maGiamGia);
             return Ok(discountExist);
         }
+        
 
     }
 }
