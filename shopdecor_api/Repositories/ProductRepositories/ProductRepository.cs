@@ -72,32 +72,32 @@ namespace shopdecor_api.Repositories.ProductRepositories
         public async Task<List<ProductDetail>> GetProductDetail(int spId)
         {
             var query = @"
-    SELECT
-        sp.Id AS ProductId,
-        sp.Ten AS ProductName,
-        sp.MoTa AS ProductDescription,
-        sp.TrangThai AS Status,
-        spc.Id AS DetailId,
-        spc.SoLuong AS Quantity,
-        spc.Gia AS Price,
-        kt.TenKichThuoc AS Size,
-        ms.TenMauSac AS Color,
-        km.LoaiGiam AS DiscountType,
-        km.MenhGia AS DiscountAmount,
-        km.HSD AS DiscountExpiryDate
-    FROM
-        SanPham_ChiTiet spc
-    JOIN
-        SanPham sp ON spc.SanPhamId = sp.Id
-    LEFT JOIN
-        KichThuoc kt ON spc.KichThuocId = kt.Id
-    LEFT JOIN
-        MauSac ms ON spc.MauSacId = ms.Id
-    LEFT JOIN
-        KhuyenMai km ON sp.KhuyenMaiMaGiamGia = km.MaGiamGia
-    WHERE
-        sp.Id = @SpId;
-        ";
+                            SELECT
+                                sp.Id AS ProductId,
+                                sp.Ten AS ProductName,
+                                sp.MoTa AS ProductDescription,
+                                sp.TrangThai AS Status,
+                                spc.Id AS DetailId,
+                                spc.SoLuong AS Quantity,
+                                spc.Gia AS Price,
+                                kt.TenKichThuoc AS Size,
+                                ms.TenMauSac AS Color,
+                                km.LoaiGiam AS DiscountType,
+                                km.MenhGia AS DiscountAmount,
+                                km.HSD AS DiscountExpiryDate
+                            FROM
+                                SanPham_ChiTiet spc
+                            JOIN
+                                SanPham sp ON spc.SanPhamId = sp.Id
+                            LEFT JOIN
+                                KichThuoc kt ON spc.KichThuocId = kt.Id
+                            LEFT JOIN
+                                MauSac ms ON spc.MauSacId = ms.Id
+                            LEFT JOIN
+                                KhuyenMai km ON sp.KhuyenMaiMaGiamGia = km.MaGiamGia
+                            WHERE
+                                sp.Id = @SpId;
+                                ";
 
             // Use SqlParameter to bind the parameter value
         var spIdParam = new SqlParameter("@SpId", spId);
@@ -109,6 +109,9 @@ namespace shopdecor_api.Repositories.ProductRepositories
 
         return productDetails;
         }
+
+        
+
 
     }
 }

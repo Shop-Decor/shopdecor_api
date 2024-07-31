@@ -1,22 +1,25 @@
-﻿using Azure.Core;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
+using shopdecor_api.Models.DTO.Category_TypeDTO;
 using shopdecor_api.Repositories.CategoryRepositories;
 
 
 namespace shopdecor_api.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("api/[controller]")]
 
 	public class CategoryController : Controller
 	{
 		private readonly ICategoryRepnsitetory _categoryRepository;
+		private readonly IMapper _mapper;
 
-		public CategoryController(ICategoryRepnsitetory categoryRepository)
+		public CategoryController(ICategoryRepnsitetory categoryRepository,IMapper mapper)
 		{
 			_categoryRepository = categoryRepository;
+			_mapper = mapper;
 		}
 		[HttpGet]	
 		
@@ -87,5 +90,13 @@ namespace shopdecor_api.Controllers
 				return BadRequest(ModelState);
 			}
 		}
-	}
+        [HttpGet("GetCategoryList")]
+        public async Task<IActionResult> GetProductTypeByProduct(int SpId)
+        {
+            var CategoryType = await _categoryRepository.GetProductByProductType(SpId);
+			var map = _mapper.Map<ProductCategory>(CategoryType);
+			return Ok(map);
+
+        }
+    }
 }

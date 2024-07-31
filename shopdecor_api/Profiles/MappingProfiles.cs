@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
+using shopdecor_api.Models.DTO.Category_TypeDTO;
 using shopdecor_api.Models.DTO.DiscountDTO;
+
 using shopdecor_api.Models.DTO.ProductDTO;
 
 namespace shopdecor_api.Profiles
@@ -27,7 +29,9 @@ namespace shopdecor_api.Profiles
             CreateMap<SanPham, UpdateProductRequest>().ReverseMap();
 
             CreateMap<SanPham_ChiTiet, DTODetails>().ReverseMap();
-
+            CreateMap<SanPham_Loai, ProductCategory>()
+                .ForMember(dest => dest.LoaiSPs, opt => opt.MapFrom(src => src.LoaiSP.Id))
+                .ReverseMap();
 
         }
     }
