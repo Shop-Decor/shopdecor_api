@@ -17,7 +17,7 @@ public class ProductDetailsRepositories : IProductDetailsRepositories
 
     public async Task<IEnumerable<SanPham_ChiTiet>> GetAllAsync()
     {
-        return await _productDetails.AsNoTracking().ToListAsync();
+        return await _productDetails.ToListAsync();
     }
 
     public async Task<SanPham_ChiTiet> GetByIdAsync(int id)
@@ -78,5 +78,10 @@ public class ProductDetailsRepositories : IProductDetailsRepositories
         {
             throw new Exception("Đã xảy ra lỗi khi xóa sản phẩm chi tiết.", ex);
         }
+
+    }
+    public async Task<List<SanPham_ChiTiet>> GetProductsDetailbyproduct(int SpId)
+    {
+        return await _context.SanPham_ChiTiet.Where(x => x.SanPham.Id == SpId).ToListAsync();
     }
 }
