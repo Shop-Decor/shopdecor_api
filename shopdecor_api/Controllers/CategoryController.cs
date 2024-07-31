@@ -4,6 +4,7 @@ using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
 using shopdecor_api.Repositories.CategoryRepositories;
+using shopdecor_api.Repositories.Product_CategoryRepositories;
 
 
 namespace shopdecor_api.Controllers
@@ -14,11 +15,13 @@ namespace shopdecor_api.Controllers
 	public class CategoryController : Controller
 	{
 		private readonly ICategoryRepnsitetory _categoryRepository;
+		private readonly IProduct_CategoryRepositories _product_CategoryRepository;
 		private readonly IMapper _mapper;
 
-		public CategoryController(ICategoryRepnsitetory categoryRepository,IMapper mapper)
+		public CategoryController(ICategoryRepnsitetory categoryRepository,IMapper mapper, IProduct_CategoryRepositories product_CategoryRepositories)
 		{
 			_categoryRepository = categoryRepository;
+            _product_CategoryRepository = product_CategoryRepositories;
 			_mapper = mapper;
 		}
 		[HttpGet]	
@@ -93,8 +96,8 @@ namespace shopdecor_api.Controllers
         [HttpGet("GetCategoryList")]
         public async Task<IActionResult> GetProductTypeByProduct(int SpId)
         {
-            var CategoryType = await _categoryRepository.GetProductByProductType(SpId);
-			var map = _mapper.Map<ProductCategory>(CategoryType);
+            var CategoryType = await _product_CategoryRepository.GetProductByProductType(SpId);
+			var map = _mapper.Map<List<ProductCategory>>(CategoryType);
 			return Ok(map);
 
         }
