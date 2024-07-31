@@ -33,9 +33,9 @@ namespace shopdecor_api.Profiles
             CreateMap<SanPham, UpdateProductRequest>().ReverseMap();
 
             CreateMap<SanPham_ChiTiet, DTODetails>().ReverseMap();
-            CreateMap<SanPham_Loai, ProductCategory>()
-                .ForMember(dest => dest.LoaiSPs, opt => opt.MapFrom(src => src.LoaiSP.Id))
-                .ReverseMap();
+            CreateMap<IEnumerable<SanPham_Loai>, ProductCategory>()
+            .ForMember(dest => dest.LoaiSPs, opt => opt.MapFrom(src => src.Select(sp => sp.LoaiSP.Id)));
+
 
         }
     }
