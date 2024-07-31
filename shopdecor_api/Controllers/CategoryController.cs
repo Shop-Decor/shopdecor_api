@@ -97,7 +97,7 @@ namespace shopdecor_api.Controllers
         public async Task<IActionResult> GetProductTypeByProduct(int SpId)
         {
             var CategoryType = await _product_CategoryRepository.GetProductByProductType(SpId);
-			var map = _mapper.Map<List<ProductCategory>>(CategoryType);
+			var map = _mapper.Map<ProductCategory>(CategoryType);
 			return Ok(map);
 
         }
