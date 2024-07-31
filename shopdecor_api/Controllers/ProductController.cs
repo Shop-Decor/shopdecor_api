@@ -115,8 +115,6 @@ namespace shopdecor_api.Controllers
             if (delProduct != null)
                 delProduct.TrangThai = false;
             return NoContent();
-
-
         }
 
         [HttpGet("User")]

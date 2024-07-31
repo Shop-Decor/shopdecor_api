@@ -14,14 +14,29 @@ namespace shopdecor_api.Profiles
             CreateMap<KhuyenMai, UpdateDiscountDTO>().ReverseMap();
             CreateMap<KhuyenMai, AddDiscountDTO>().ReverseMap();
             CreateMap<SanPham, AddProductRequest>().ReverseMap();
-            CreateMap<SanPham, IndexProductRequest>().ForMember(dest => dest.Hinhs, opt => opt.MapFrom(src => src.Hinhs.Select(h => h.Link))).ReverseMap();
+            CreateMap<SanPham, IndexProductRequest>()
+                .ForMember(dest => dest.Hinhs, opt => opt.MapFrom(src => src.Hinhs.Select(h => h.Link)))
+                .ReverseMap();
             CreateMap<SanPham, GetUserProduct>()
-            .ForMember(dest => dest.ColorName, opt => opt.MapFrom(src => src.SanPham_ChiTiets.Select(ct => ct.MauSac.TenMauSac).Distinct().ToList()))
-            .ForMember(dest => dest.Hinh, opt => opt.MapFrom(src => src.Hinhs.FirstOrDefault().Link))
-            .ForMember(dest => dest.gia, opt => opt.MapFrom(src => src.SanPham_ChiTiets.Any() ? src.SanPham_ChiTiets.Min(s => s.Gia) : 0)).ReverseMap();
+                .ForMember(dest => dest.ColorName, opt => opt.MapFrom(src => src.SanPham_ChiTiets.Select(ct => ct.MauSac.TenMauSac).Distinct().ToList()))
+                .ForMember(dest => dest.Hinh, opt => opt.MapFrom(src => src.Hinhs.FirstOrDefault().Link))
+                .ForMember(dest => dest.gia, opt => opt.MapFrom(src => src.SanPham_ChiTiets.Any() ? src.SanPham_ChiTiets.Min(s => s.Gia) : 0))
+                .ReverseMap();
             CreateMap<SanPham, UpdateProductRequest>().ReverseMap();
 
-            CreateMap<SanPham_ChiTiet, DTODetails>().ReverseMap();
+            CreateMap<SanPham_ChiTiet, IndexDTODetails>()
+                .ForMember(dest => dest.TenMauSac, opt => opt.MapFrom(src => src.MauSac.TenMauSac))
+                .ForMember(dest => dest.TenKichThuoc, opt => opt.MapFrom(src => src.KichThuoc.TenKichThuoc))
+                .ReverseMap()
+                .ForMember(dest => dest.MauSac, opt => opt.Ignore())
+                .ForMember(dest => dest.KichThuoc, opt => opt.Ignore());
+
+            CreateMap<SanPham_ChiTiet, DTODetails>()
+                .ForMember(dest => dest.TenMauSac, opt => opt.MapFrom(src => src.MauSac.TenMauSac))
+                .ForMember(dest => dest.TenKichThuoc, opt => opt.MapFrom(src => src.KichThuoc.TenKichThuoc))
+                .ReverseMap()
+                .ForMember(dest => dest.MauSac, opt => opt.Ignore())
+                .ForMember(dest => dest.KichThuoc, opt => opt.Ignore());
         }
     }
 }

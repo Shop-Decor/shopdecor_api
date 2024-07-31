@@ -60,6 +60,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+
 builder.Services.AddDbContext<SeabugDbContext>(options =>
 {
     options.UseLazyLoadingProxies();

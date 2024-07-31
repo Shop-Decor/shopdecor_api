@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
 using shopdecor_api.Repositories.ProductDetailsRepositories;
@@ -12,83 +13,150 @@ namespace shopdecor_api.Controllers
     {
         private readonly IProductDetailsRepositories _repository;
         private readonly IMapper _mapper;
+        private readonly ILogger<ProductDetailsController> _logger;
 
-        public ProductDetailsController(IProductDetailsRepositories repository, IMapper mapper)
+        public ProductDetailsController(IProductDetailsRepositories repository, IMapper mapper, ILogger<ProductDetailsController> logger)
         {
             _repository = repository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         // GET api/productdetails
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DTODetails>>> GetAll()
+        public async Task<ActionResult> GetAll()
         {
-            var productDetails = await _repository.GetAllAsync();
-            var dtoList = productDetails.Select(pd => _mapper.Map<DTODetails>(pd)).ToList();
-            return Ok(dtoList);
+            try
+            {
+                var productDetails = await _repository.GetAllAsync();
+                var dtoList = _mapper.Map<List<IndexDTODetails>>(productDetails);
+                return Ok(dtoList);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching all product details.");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         // GET api/productdetails/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<DTODetails>> GetById(int id)
+        public async Task<ActionResult<IndexDTODetails>> GetById(int id)
         {
-            var productDetail = await _repository.GetByIdAsync(id);
-            if (productDetail == null)
+            try
             {
-                return NotFound();
-            }
+                var productDetail = await _repository.GetByIdAsync(id);
+                if (productDetail == null)
+                {
+                    return NotFound();
+                }
 
-            var dto = _mapper.Map<DTODetails>(productDetail);
-            return Ok(dto);
+                var dto = _mapper.Map<IndexDTODetails>(productDetail);
+                return Ok(dto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error occurred while fetching product detail with id {id}.");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         // POST api/productdetails
         [HttpPost]
-        public async Task<ActionResult> Add([FromBody] DTODetails dto)
+        public async Task<ActionResult> Add([FromBody] IndexDTODetails dto)
         {
-            if (dto == null)
+            try
             {
-                return BadRequest();
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            var productDetail = _mapper.Map<SanPham_ChiTiet>(dto);
-            await _repository.AddAsync(productDetail);
-            return CreatedAtAction(nameof(GetById), new { id = productDetail.Id }, productDetail);
+                var productDetail = _mapper.Map<SanPham_ChiTiet>(dto);
+                await _repository.AddAsync(productDetail);
+                return CreatedAtAction(nameof(GetById), new { id = productDetail.Id }, productDetail);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while adding a new product detail.");
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         // PUT api/productdetails/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, [FromBody] DTODetails dto)
+        public async Task<ActionResult> Update(int id, [FromBody] IndexDTODetails dto)
         {
-            if (id != dto.Id)
+            try
             {
-                return BadRequest();
-            }
+                if (dto == null)
+                {
+                    return BadRequest("DTO is null");
+                }
 
-            var existingProductDetail = await _repository.GetByIdAsync(id);
-            if (existingProductDetail == null)
+                if (id != dto.Id)
+                {
+                    return BadRequest("ID mismatch");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var existingProductDetail = await _repository.GetByIdAsync(id);
+                if (existingProductDetail == null)
+                {
+                    return NotFound();
+                }
+
+                var updatedProductDetail = _mapper.Map(dto, existingProductDetail);
+                await _repository.UpdateAsync(updatedProductDetail);
+                return Ok(updatedProductDetail);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                _logger.LogError(ex, $"Error occurred while updating product detail with id {id}.");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-
-            var updatedProductDetail = _mapper.Map<SanPham_ChiTiet>(dto);
-            await _repository.UpdateAsync(updatedProductDetail);
-            return Ok();
         }
 
         // DELETE api/productdetails/{id}
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var existingProductDetail = await _repository.GetByIdAsync(id);
-            if (existingProductDetail == null)
+            try
             {
-                return NotFound();
+                await _repository.DeleteAsync(id);
+                return Ok(); // Trả về mã 200 OK
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error occurred while deleting product detail with id {id}.");
+                return StatusCode(500, "Internal server error");
+            }
+        }
 
-            await _repository.DeleteAsync(id);
-            return Ok();
+
+        // GET api/productdetails/GetProductDetailsbyproduct?SpId={SpId}
+        [HttpGet("GetProductDetailsbyproduct")]
+        public async Task<ActionResult<IEnumerable<DTODetails>>> GetProductDetailsbyproduct(int SpId)
+        {
+            try
+            {
+                var productDetails = await _repository.GetProductsDetailbyproduct(SpId);
+                if (productDetails == null || !productDetails.Any())
+                {
+                    return NotFound();
+                }
+                var dtoList = productDetails.Select(pd => _mapper.Map<DTODetails>(pd)).ToList();
+                return Ok(dtoList);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error occurred while fetching product details by product id {SpId}.");
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
 }
-

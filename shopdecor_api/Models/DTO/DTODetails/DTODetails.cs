@@ -8,6 +8,9 @@ namespace shopdecor_api.Models.DTO
         public int Gia { get; set; }
         public int SoLuong { get; set; }
 
-        
+        public string? TenMauSac { get; set; }
+        public string? TenKichThuoc { get; set; }
+
+
     }
 }
