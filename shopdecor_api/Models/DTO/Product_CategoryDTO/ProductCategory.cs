@@ -2,6 +2,6 @@
 {
     public class ProductCategory
     {
-        public List<int> LoaiSPs { get; set; }
+        public List<int>? LoaiSPs { get; set; }
     }
 }
