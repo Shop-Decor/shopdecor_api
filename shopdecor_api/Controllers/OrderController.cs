@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using shopdecor_api.Models.Domain;
-using shopdecor_api.Models.DTO.OrderDTO;
-using shopdecor_api.Models.DTO.TypeDTO;
 using shopdecor_api.Repositories.OrderRepositories;
 
 namespace shopdecor_api.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("api/[controller]")]
 	public class OrderController : Controller
 	{
@@ -41,7 +38,6 @@ namespace shopdecor_api.Controllers
 			}
 
 			return Ok(test);
-			
 			
 		}
 

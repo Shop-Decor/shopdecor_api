@@ -51,11 +51,16 @@ namespace shopdecor_api.Repositories.CategoryRepositories
 			await _db.SaveChangesAsync();
 			return loaisp;
 		}
-
-
         public async Task<List<SanPham_Loai>> GetProductByProductType(int SpId)
         {
             return await _db.SanPham_Loai.Where(x => x.SanPham.Id == SpId).ToListAsync();
+        }
+
+        public async Task<List<SanPham>> GetProductsByTypeId(int typeId)
+        {
+            return await _db.SanPham
+                           .Where(p => p.SanPham_Loais.Any(spl => spl.LoaiSP.Id == typeId))
+                           .ToListAsync();
         }
 
     }
