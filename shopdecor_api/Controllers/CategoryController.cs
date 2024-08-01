@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
+using shopdecor_api.Models.DTO.TypeDTO;
 using shopdecor_api.Repositories.CategoryRepositories;
 
 
