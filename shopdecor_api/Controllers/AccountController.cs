@@ -64,7 +64,7 @@ namespace shopdecor_api.Controllers
             return Ok(new { Token = result });
         }
 
-        [HttpPut("Update")]
+        [HttpPut("{Id}")]
 
         public async Task<IActionResult> Update([FromBody] CreateAccount account, string Id)
         {
@@ -81,6 +81,8 @@ namespace shopdecor_api.Controllers
         }
 
         [HttpGet("Get")]
+        //check role 
+        [Authorize(Roles="Admin")]
         public async Task<IActionResult> Get()
         {
             

@@ -1,5 +1,6 @@
 ﻿
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using shopdecor_api.Helper;
@@ -30,36 +31,45 @@ namespace shopdecor_api.Repositories.AccountRepositories
 
         public async Task<string> SignInAsync(SignInModel model)
         {
-            var user = await userManager.FindByEmailAsync(model.Email);
-            var passwordValid = await userManager.CheckPasswordAsync(user, model.Password);
-            if (user == null || !passwordValid)
+            var user = await userManager.FindByNameAsync(model.UserName);
+            if (user == null)
             {
-                return string.Empty;
+                
+                string message = "1001";
+
+                return message ; 
             }
-           
+            if (!await userManager.CheckPasswordAsync(user, model.Password))
+            {
+               string message = "1002";
+                return message;
+            }
+
             var authClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, model.Email),
+                new Claim(ClaimTypes.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
+            //check role
 
-            var userRole = await userManager.GetRolesAsync(user);
-            foreach (var role in userRole)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, role.ToString()));
-            }
+            var userRoles = await userManager.GetRolesAsync(user);
+            authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
+          
+            //lấy giá trị roll = user hoặc role = admin
+            var role = (userRoles.Select(role => new Claim(ClaimTypes.Name, role))).First().Value;
 
-            var authenKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
 
+
+
+            var authKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
             var token = new JwtSecurityToken(
                 issuer: configuration["JWT:ValidIssuer"],
-                audience: configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddMinutes(20),
+                audience:role,
+                expires: DateTime.Now.AddDays(7),
                 claims: authClaims,
-                signingCredentials: new SigningCredentials(authenKey, SecurityAlgorithms.HmacSha512Signature)
-
+                signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha512)
             );
-
+           
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
@@ -77,14 +87,14 @@ namespace shopdecor_api.Repositories.AccountRepositories
             if (result.Succeeded)
             {
                 //kiểm tra role Customer đã có hay chưa
-                if (!await roleManager.RoleExistsAsync(AppRole.Admin))
+                if (!await roleManager.RoleExistsAsync(AppRole.User))
                 {
                     // nếu chưa -> tạo role mới 
-                    await roleManager.CreateAsync(new IdentityRole(AppRole.Admin));
+                    await roleManager.CreateAsync(new IdentityRole(AppRole.User));
                 }
 
                 // dã có thì add role cho tk 
-                await userManager.AddToRoleAsync(user, AppRole.Admin);
+                await userManager.AddToRoleAsync(user, AppRole.User);
             }
             return result;
         }
@@ -94,6 +104,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(configuration["JWT:Secret"]);
+
             try
             {
                 var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
@@ -108,7 +119,6 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 }, out SecurityToken validatedToken);
 
                 var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
                 if (userId != null)
                 {
                     return await userManager.FindByIdAsync(userId);
@@ -116,7 +126,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
             }
             catch
             {
-                
+                // Optionally, log the exception or handle it as needed
             }
 
             return null;
@@ -127,11 +137,10 @@ namespace shopdecor_api.Repositories.AccountRepositories
             var user = await ValidateTokenAndGetUserAsync(token);
             if (user == null)
             {
-                return null;
+                return null; // Invalid token
             }
 
             var roles = await userManager.GetRolesAsync(user);
-
             return new
             {
                 user.Email,
