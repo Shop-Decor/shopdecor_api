@@ -1,14 +1,8 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Data;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Repositories.AccountRepositories;
@@ -20,6 +14,7 @@ using shopdecor_api.Repositories.DiscountRepositories;
 using shopdecor_api.Repositories.ImageRepositories;
 using shopdecor_api.Repositories.ProductDetailsRepositories;
 using shopdecor_api.Repositories.ProductRepositories;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
