@@ -12,11 +12,10 @@ using shopdecor_api.Repositories.CategoryColorRepositories;
 using shopdecor_api.Repositories.CategoryRepositories;
 using shopdecor_api.Repositories.DiscountRepositories;
 using shopdecor_api.Repositories.ImageRepositories;
+using shopdecor_api.Repositories.OrderDetailRepositories;
+using shopdecor_api.Repositories.OrderRepositories;
 using shopdecor_api.Repositories.ProductDetailsRepositories;
 using shopdecor_api.Repositories.ProductRepositories;
-using System.Text;
-using shopdecor_api.Repositories.OrderRepositories;
-using shopdecor_api.Repositories.OrderDetailRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
