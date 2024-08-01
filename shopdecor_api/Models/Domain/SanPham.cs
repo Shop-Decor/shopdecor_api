@@ -16,5 +16,6 @@ namespace shopdecor_api.Models.Domain
         public virtual IEnumerable<SanPham_Loai>? SanPham_Loais { get; set; }
         public virtual IEnumerable<Hinh>? Hinhs { get; set; }
         public virtual IEnumerable<DonHang_ChiTiet>? DonHang_ChiTiets { get; set; }
+        public virtual IEnumerable<SanPham_ChiTiet>? SanPham_ChiTiets { get; set; }
     }
 }

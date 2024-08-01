@@ -6,10 +6,10 @@ namespace shopdecor_api.Repositories.DiscountRepositories
     {
         Task<IEnumerable<KhuyenMai>> GetAllAsync();
         Task<KhuyenMai>  GetAsync(string maGiamGia);
-        Task<bool> DiscountExist (string maGiamGia);
 
         Task<KhuyenMai> AddAsync(KhuyenMai khuyenMai);
         Task<KhuyenMai?> UpdateAsync(KhuyenMai khuyenMai, string maGiamGia);
-        
+        Task<KhuyenMai> DeleteAsync (string maGiamGia);
+        Task<bool> DiscountExist(string maGiamGia);
     }
 }

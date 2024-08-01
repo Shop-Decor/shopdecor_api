@@ -8,6 +8,7 @@
         public int MenhGia { get; set; }
         public DateTime NgayTao { get; set; }
         public DateTime HSD { get; set; }
+        public bool LoaiKM { get; set; }
 
     }
 }

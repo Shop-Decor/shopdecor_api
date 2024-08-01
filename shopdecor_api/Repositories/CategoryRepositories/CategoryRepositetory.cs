@@ -4,7 +4,7 @@ using shopdecor_api.Models.Domain;
 
 namespace shopdecor_api.Repositories.CategoryRepositories
 {
-	public class CategoryRepositetory : ICategoryRepnsitetory
+    public class CategoryRepositetory : ICategoryRepnsitetory
 	{
 		private readonly SeabugDbContext _db;
 
@@ -52,5 +52,12 @@ namespace shopdecor_api.Repositories.CategoryRepositories
 			return loaisp;
 		}
 
-	}
+
+        public async Task<List<SanPham_Loai>> GetProductByProductType(int SpId)
+        {
+            return await _db.SanPham_Loai.Where(x => x.SanPham.Id == SpId).ToListAsync();
+        }
+
+    }
+
 }

@@ -25,6 +25,7 @@ namespace shopdecor_api.Controllers
 
             var Discount = await _discountRepository.GetAllAsync();
             var Map = _mapper.Map<List<IndexDiscountDTO>>(Discount);
+
             return Ok(Map);
         }
         [HttpGet("{maGiamGia}")]
@@ -33,32 +34,50 @@ namespace shopdecor_api.Controllers
             if (await _discountRepository.DiscountExist(maGiamGia))
                 return NotFound();
             var Discount = _mapper.Map<IndexDiscountDTO>(_discountRepository.GetAsync(maGiamGia));
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             return Ok(Discount);
 
         }
         [HttpPost]
-        public async Task<IActionResult> AddAsycn([FromBody] IndexDiscountDTO indexDiscountDTO)
+        public async Task<IActionResult> AddAsycn([FromBody] AddDiscountDTO addDiscountDTO)
         {
-            var Discount = _mapper.Map<KhuyenMai>(indexDiscountDTO);
+
+            var Discount = _mapper.Map<KhuyenMai>(addDiscountDTO);
             var DiscountCreate = await _discountRepository.AddAsync(Discount);
-            
             return Ok(DiscountCreate);
 
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateAsycn([FromBody]UpdateDiscountDTO update,string maGiamGia)
+        public async Task<IActionResult> UpdateAsycn([FromBody] UpdateDiscountDTO update, string maGiamGia)
         {
             var map = _mapper.Map<KhuyenMai>(update);
             var DiscountUpdate = await _discountRepository.UpdateAsync(map, maGiamGia);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            if(DiscountUpdate == null)
+            if (DiscountUpdate == null)
             {
                 return NotFound();
-            }  
+            }
             return NoContent();
         }
+        [HttpDelete("{maGiamGia}")]
+        public async Task<IActionResult> DeleteAsync(string maGiamGia)
+        {
+            var discountDelete = await _discountRepository.DeleteAsync(maGiamGia);
+            if (discountDelete == null)
+                return NotFound();
+            if (!ModelState.IsValid)
+                return BadRequest();
+            return Ok(discountDelete);
+        }
+        [HttpGet("discountExist")]
+        public async Task<IActionResult> DiscountExist(string maGiamGia)
+        {
+            var discountExist = await _discountRepository.DiscountExist(maGiamGia);
+            return Ok(discountExist);
+        }
+        
+
     }
 }

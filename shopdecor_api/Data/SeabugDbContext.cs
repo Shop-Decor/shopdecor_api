@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Models.Domain;
+using shopdecor_api.Models.DTO.ProductDTO;
 
 namespace shopdecor_api.Data
 {
-    public class SeabugDbContext : DbContext
+    public class SeabugDbContext : IdentityDbContext<ApplicationUser>
     {
         public SeabugDbContext(DbContextOptions<SeabugDbContext> options) : base(options)
         {
@@ -21,5 +23,15 @@ namespace shopdecor_api.Data
         public DbSet<SanPham_ChiTiet> SanPham_ChiTiet { get; set; }
         public DbSet<SanPham_Loai> SanPham_Loai { get; set; }
         public DbSet<TaiKhoan> TaiKhoan { get; set; }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Định nghĩa Revenue như một loại thực thể không có khóa
+            modelBuilder.Entity<ProductDetail>()
+                .HasNoKey()
+                .ToView(null);
+        }
     }
 }

@@ -19,9 +19,24 @@ namespace shopdecor_api.Repositories.DiscountRepositories
             return khuyenMai;
         }
 
+        public async Task<KhuyenMai> DeleteAsync(string maGiamGia)
+        {
+            var discountDelete = await _context.KhuyenMai.FirstOrDefaultAsync(x => x.MaGiamGia == maGiamGia);
+            if (discountDelete == null)
+                return null;
+            _context.KhuyenMai.Remove(discountDelete);
+            await _context.SaveChangesAsync();
+            return discountDelete;
+        }
+
         public async Task<bool> DiscountExist(string maGiamGia)
         {
             return await _context.KhuyenMai.AnyAsync(x => x.MaGiamGia == maGiamGia);
+        }
+
+        public Task<bool> DiscountExist(string maGiamGia, string? currentMaGiamGia)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<KhuyenMai>> GetAllAsync()
@@ -44,7 +59,6 @@ namespace shopdecor_api.Repositories.DiscountRepositories
                 discountExist.MenhGia = khuyenMai.MenhGia;
                 discountExist.LoaiGiam = khuyenMai.LoaiGiam;
                 discountExist.MoTa = khuyenMai.MoTa;
-                discountExist.NgayTao = khuyenMai.NgayTao;
                 discountExist.HSD = khuyenMai.HSD;
                 discountExist.LoaiKM = khuyenMai.LoaiKM;
                 await _context.SaveChangesAsync();
