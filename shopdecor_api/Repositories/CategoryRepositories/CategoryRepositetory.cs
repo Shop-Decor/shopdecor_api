@@ -52,6 +52,5 @@ namespace shopdecor_api.Repositories.CategoryRepositories
 			return loaisp;
 		}
 
-		
 	}
 }

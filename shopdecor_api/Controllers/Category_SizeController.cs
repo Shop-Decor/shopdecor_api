@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using shopdecor_api.Models.Domain;
-using shopdecor_api.Models.DTO;
+
+using shopdecor_api.Models.DTO.SizeDTO;
 using shopdecor_api.Repositories.Category_SizeRepositories;
-using shopdecor_api.Repositories.CategoryRepositories;
+
 
 namespace shopdecor_api.Controllers
 {
