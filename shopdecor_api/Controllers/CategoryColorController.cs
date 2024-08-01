@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
+using shopdecor_api.Models.DTO.ColorDTO;
 using shopdecor_api.Repositories.CategoryColorRepositories;
 
 namespace shopdecor_api.Controllers

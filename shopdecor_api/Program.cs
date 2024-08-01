@@ -20,6 +20,8 @@ using shopdecor_api.Repositories.DiscountRepositories;
 using shopdecor_api.Repositories.ImageRepositories;
 using shopdecor_api.Repositories.ProductDetailsRepositories;
 using shopdecor_api.Repositories.ProductRepositories;
+using shopdecor_api.Repositories.OrderRepositories;
+using shopdecor_api.Repositories.OrderDetailRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +74,8 @@ builder.Services.AddScoped<ICategoryRepnsitetory, CategoryRepositetory>();
 builder.Services.AddScoped<ICategory_SizeRepositories, Category_SizeRepositories>();
 builder.Services.AddScoped<ICategoryColorRepositories, CategoryColorRepositories>();
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
+builder.Services.AddScoped<IOrderRipository, OrderRepository>();
+builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 builder.Services.AddScoped<IBillRepository, BillRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();

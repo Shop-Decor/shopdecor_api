@@ -3,7 +3,8 @@ using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
 using shopdecor_api.Models.DTO.DiscountDTO;
-
+using shopdecor_api.Models.DTO.OrderDetailDTO;
+using shopdecor_api.Models.DTO.OrderDTO;
 using shopdecor_api.Models.DTO.ProductDTO;
 
 namespace shopdecor_api.Profiles
@@ -48,8 +49,11 @@ namespace shopdecor_api.Profiles
                 .ForMember(dest => dest.KichThuoc, opt => opt.Ignore());
             
             CreateMap<SanPham, UpdateProductRequest>().ReverseMap();
+
             CreateMap<IEnumerable<SanPham_Loai>, ProductCategory>()
             .ForMember(dest => dest.LoaiSPs, opt => opt.MapFrom(src => src.Select(sp => sp.LoaiSP.Id)));
+            CreateMap<DonHang, OrderDTO>().ReverseMap();
+			CreateMap<DonHang_ChiTiet, OrderDetailDTO>().ReverseMap();
 
         }
     }
