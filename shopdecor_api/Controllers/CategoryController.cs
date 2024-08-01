@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using shopdecor_api.Models.Domain;
-using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
+using shopdecor_api.Models.DTO.ProductDTO;
+using shopdecor_api.Models.DTO.TypeDTO;
 using shopdecor_api.Repositories.CategoryRepositories;
 
 
@@ -15,11 +16,10 @@ namespace shopdecor_api.Controllers
 	{
 		private readonly ICategoryRepnsitetory _categoryRepository;
 		private readonly IMapper _mapper;
-
 		public CategoryController(ICategoryRepnsitetory categoryRepository,IMapper mapper)
 		{
 			_categoryRepository = categoryRepository;
-			_mapper = mapper;
+			_mapper = mapper;		
 		}
 		[HttpGet]	
 		
@@ -30,7 +30,7 @@ namespace shopdecor_api.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> AddPType([FromBody] ProductTypeDTO request)
+		public async Task<IActionResult> AddPType([FromBody] TypeDTO request)
 		{
 			if (ModelState.IsValid)
 			{
@@ -66,7 +66,7 @@ namespace shopdecor_api.Controllers
 			}
 		}
 		[HttpPut("{id}")]
-		public async Task<IActionResult> updatePT(int id, [FromBody] ProductTypeDTO request)
+		public async Task<IActionResult> updatePT(int id, [FromBody] TypeDTO request)
 		{
 			if (ModelState.IsValid)
 			{
@@ -90,13 +90,27 @@ namespace shopdecor_api.Controllers
 				return BadRequest(ModelState);
 			}
 		}
+
         [HttpGet("GetCategoryList")]
         public async Task<IActionResult> GetProductTypeByProduct(int SpId)
         {
             var CategoryType = await _categoryRepository.GetProductByProductType(SpId);
 			var map = _mapper.Map<ProductCategory>(CategoryType);
 			return Ok(map);
+        }
 
+        [HttpGet("GetProductsByTypeId/{typeId}")]
+        public async Task<IActionResult> GetProductsByTypeId(int typeId)
+        {
+            var products = await _categoryRepository.GetProductsByTypeId(typeId);
+
+            if (products == null || !products.Any())
+            {
+                return NotFound(new { Message = "No products found for the given type ID." });
+            }
+
+            var productDtos = _mapper.Map<List<ProductByTypeDTO>>(products);
+            return Ok(productDtos);
         }
     }
 }

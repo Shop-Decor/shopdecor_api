@@ -3,7 +3,8 @@ using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
 using shopdecor_api.Models.DTO.DiscountDTO;
-
+using shopdecor_api.Models.DTO.OrderDetailDTO;
+using shopdecor_api.Models.DTO.OrderDTO;
 using shopdecor_api.Models.DTO.ProductDTO;
 
 namespace shopdecor_api.Profiles
@@ -48,8 +49,22 @@ namespace shopdecor_api.Profiles
                 .ForMember(dest => dest.KichThuoc, opt => opt.Ignore());
             
             CreateMap<SanPham, UpdateProductRequest>().ReverseMap();
+
             CreateMap<IEnumerable<SanPham_Loai>, ProductCategory>()
             .ForMember(dest => dest.LoaiSPs, opt => opt.MapFrom(src => src.Select(sp => sp.LoaiSP.Id)));
+            CreateMap<DonHang, OrderDTO>().ReverseMap();
+			CreateMap<DonHang_ChiTiet, OrderDetailDTO>().ReverseMap();
+            CreateMap<SanPham, ProductByTypeDTO>()
+            .ForMember(dest => dest.ColorName, opt => opt.MapFrom(src => src.SanPham_ChiTiets.Select(ct => ct.MauSac.TenMauSac).Distinct().ToList()))
+            .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.SanPham_ChiTiets.OrderBy(x => x.Gia).Select(x => x.MauSac.TenMauSac).FirstOrDefault()))
+            .ForMember(dest => dest.Hinh, opt => opt.MapFrom(src => src.Hinhs.FirstOrDefault().Link))
+            .ForMember(dest => dest.gia, opt => opt.MapFrom(src => src.SanPham_ChiTiets.Any() ? src.SanPham_ChiTiets.Min(s => s.Gia) : 0))
+            .ForMember(dest => dest.LoaiGiam, opt => opt.MapFrom(x => x.KhuyenMai.LoaiGiam))
+            .ForMember(dest => dest.MenhGia, opt => opt.MapFrom(x => x.KhuyenMai.MenhGia))
+            .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.SanPham_ChiTiets.OrderBy(s => s.Gia).Select(s => s.KichThuoc.TenKichThuoc).FirstOrDefault()))
+            .ForMember(dest => dest.SoLuong, opt => opt.MapFrom(src => src.SanPham_ChiTiets.OrderBy(s => s.Gia).Select(x => x.SoLuong).FirstOrDefault()))
+            .ForMember(dest => dest.MaGiamGia, opt => opt.MapFrom(x => x.KhuyenMai.MaGiamGia))
+            .ReverseMap();
 
         }
     }

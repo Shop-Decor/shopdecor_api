@@ -10,5 +10,6 @@ namespace shopdecor_api.Repositories.CategoryRepositories
 		Task<LoaiSP?> UpdatePType(LoaiSP loaisp);
 		Task<LoaiSP?> GetLoaiSPAsync(int id);
         public Task<List<SanPham_Loai>> GetProductByProductType(int SpId);
+        Task<List<SanPham>> GetProductsByTypeId(int typeId);
     }
 }
