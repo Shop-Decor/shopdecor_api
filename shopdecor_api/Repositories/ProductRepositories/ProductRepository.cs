@@ -100,18 +100,18 @@ namespace shopdecor_api.Repositories.ProductRepositories
                                 ";
 
             // Use SqlParameter to bind the parameter value
-        var spIdParam = new SqlParameter("@SpId", spId);
+            var spIdParam = new SqlParameter("@SpId", spId);
 
             // Execute the query and map results to ProductDetail
-        var productDetails = await _db.Set<ProductDetail>()
-                                          .FromSqlRaw(query, spIdParam)
-                                          .ToListAsync();
+            var productDetails = await _db.Set<ProductDetail>()
+                                              .FromSqlRaw(query, spIdParam)
+                                              .ToListAsync();
 
-        return productDetails;
+            return productDetails;
         }
-
-        
-
-
+        public async Task<List<SanPham>> GetProductsByTypeId(int typeId)
+        {
+            return await _db.SanPham_Loai.Where(x => x.LoaiSP.Id == typeId).Select(x => x.SanPham).ToListAsync();
+        }
     }
 }

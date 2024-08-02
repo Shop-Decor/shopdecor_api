@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using shopdecor_api.Models.Domain;
+using shopdecor_api.Models.DTO.Category_TypeDTO;
 using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Repositories.DiscountRepositories;
 using shopdecor_api.Repositories.ImageRepositories;
+using shopdecor_api.Repositories.Product_CategoryRepositories;
 using shopdecor_api.Repositories.ProductRepositories;
 
 namespace shopdecor_api.Controllers
@@ -17,13 +19,15 @@ namespace shopdecor_api.Controllers
         private readonly IMapper _mapper;
         private readonly IDiscountRepository _discountRepository;
         private readonly IImageRepository _imageRepository;
+        private readonly IProduct_CategoryRepository _product_CategoryRepository;
 
-        public ProductController(IProductRepository productRepository, IMapper mapper, IDiscountRepository discountRepository, IImageRepository imageRepository)
+        public ProductController(IProductRepository productRepository, IMapper mapper, IDiscountRepository discountRepository, IImageRepository imageRepository, IProduct_CategoryRepository product_CategoryRepository)
         {
             _productRepository = productRepository;
             _mapper = mapper;
             _discountRepository = discountRepository;
             _imageRepository = imageRepository;
+            _product_CategoryRepository = product_CategoryRepository;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllProducts()
@@ -132,6 +136,27 @@ namespace shopdecor_api.Controllers
             return Ok(product);
         }
 
+        [HttpGet("GetProductsByTypeId/{SpId}")]
+        public async Task<IActionResult> GetProductsByTypeId(int SpId)
+        {
+            var CategoryType = await _product_CategoryRepository.GetProductByProductType(SpId);
+            var listCategoryId = _mapper.Map<ProductCategory>(CategoryType);
+
+            var allProducts = new List<SanPham>();
+            foreach (var item in listCategoryId.LoaiSPs)
+            {
+                var products = await _productRepository.GetProductsByTypeId(item);
+                allProducts.AddRange(products);
+            }
+
+            if (allProducts == null || !allProducts.Any())
+            {
+                return NotFound(new { Message = "No products found for the given type ID." });
+            }
+            var distinctProducts = allProducts.Where(x => x.Id != SpId).Distinct().ToList();
+            var productDTO = _mapper.Map<List<GetUserProduct>>(distinctProducts);
+            return Ok(productDTO);
+        }
 
     }
 }
