@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace shopdecor_api.Models.DTO.AccountDTO
 {
     public class User
     {
+        public static ClaimsIdentity Identity { get; internal set; }
         public string Id { get; set; } = null!;
         [Required]
         public string UserName { get; set; } = null!;
