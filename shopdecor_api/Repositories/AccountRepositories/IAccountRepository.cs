@@ -12,7 +12,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
 
         Task<IEnumerable<ApplicationUser>> GetAllUsersAsync();
         public Task<IdentityResult> CreateUser(CreateAccount account);
-        public Task<IdentityResult> UpdateUser(CreateAccount account, string Id);
+        public Task<IdentityResult> UpdateUser(EditAccount account, string Id);
         public Task<IdentityResult> DeleteUser(string ID);
 
     }

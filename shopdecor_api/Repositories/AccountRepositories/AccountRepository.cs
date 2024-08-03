@@ -9,6 +9,7 @@ using shopdecor_api.Models.DTO.AccountDTO;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace shopdecor_api.Repositories.AccountRepositories
 {
@@ -45,6 +46,13 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 return message;
             }
 
+            var checkStart = user.Status;
+            if (checkStart == false)
+            {
+                string message = "1003";
+                return message;
+            }
+
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),
@@ -77,9 +85,10 @@ namespace shopdecor_api.Repositories.AccountRepositories
         {
             var user = new ApplicationUser
             {
+                UserName = model.UserName,
                 FullName = model.FullName,
                 Email = model.Email,
-                UserName = model.UserName
+               
             };
             var result = await userManager.CreateAsync(user, model.Password);
 
@@ -151,7 +160,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
         {
             // Lấy tất cả người dùng từ UserManager
-            var users = userManager.Users.ToList();
+            var users = userManager.Users.ToList().Where(x=> x.Status == true);
             return await Task.FromResult(users);
         }
 
@@ -185,7 +194,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
             return result;
         }
 
-        public async Task<IdentityResult> UpdateUser(CreateAccount account, string Id)
+        public async Task<IdentityResult> UpdateUser(EditAccount account, string Id)
         {
 
 
@@ -194,6 +203,15 @@ namespace shopdecor_api.Repositories.AccountRepositories
             if (user == null)
             {
                 return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+            }
+           //check giá trị có phù hợp như trong model không
+           if(!Regex.IsMatch(account.FullName, "^[a-zA-Z ]+$"))
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "Tên Người Dùng chỉ chứa kí tự chữ" });
+            }
+           if (!Regex.IsMatch(account.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "Email không hợp lệ" });
             }
 
             user.FullName = account.FullName;
