@@ -13,6 +13,10 @@ namespace shopdecor_api.Models.Domain
         // 0. Chờ xách nhận / 1. Đang giao / 2. Đã giao / 3.Đã Hủy
         public byte TTDonHang { get; set; }
         public bool TTThanhToan { get; set; }
+        public string? HoTen { get; set; }
+        public string? DiaChi { get; set; }
+        public string? SDT { get; set; }
+        public string? Email { get; set; }
         public virtual TaiKhoan? TaiKhoan { get; set; }
         public virtual KhuyenMai? KhuyenMai { get; set; }
         public virtual IEnumerable<HoaDon>? HoaDons { get; set; }

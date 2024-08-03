@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using shopdecor_api.Models.DTO.OrderDTO;
 using shopdecor_api.Repositories.OrderRepositories;
 
 namespace shopdecor_api.Controllers
@@ -40,7 +41,37 @@ namespace shopdecor_api.Controllers
 			return Ok(test);
 			
 		}
+        [HttpPost("{CreateOrder}")]
+        public async Task<IActionResult> CreateOrder([FromBody] OrderCreateDto orderDto)
+        {
+            if (orderDto == null)
+            {
+                return BadRequest("Dữ liệu đơn hàng không hợp lệ.");
+            }
 
-		
-	}
+            try
+            {
+                var order = await _orderRipository.CreateOrderAsync(orderDto);
+                return Ok(order);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi hệ thống: {ex.Message}");
+            }
+        }
+
+        [HttpGet("Getorder/{id}")]
+        public async Task<IActionResult> GetOrderById(int id)
+        {
+            var order = await _orderRipository.GetOrderByIdAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(order);
+        }
+
+
+    }
 }
