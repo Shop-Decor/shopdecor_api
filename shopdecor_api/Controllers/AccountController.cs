@@ -66,7 +66,7 @@ namespace shopdecor_api.Controllers
 
         [HttpPut("{Id}")]
 
-        public async Task<IActionResult> Update([FromBody] CreateAccount account, string Id)
+        public async Task<IActionResult> Update([FromBody] EditAccount account, string Id)
         {
             var result = await accountRepo.UpdateUser(account,Id);
 
@@ -130,7 +130,7 @@ namespace shopdecor_api.Controllers
             return null;
         }
 
-        [HttpPut("Delete")]
+        [HttpPut("Delete/{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {
             var result = await accountRepo.DeleteUser( Id);
