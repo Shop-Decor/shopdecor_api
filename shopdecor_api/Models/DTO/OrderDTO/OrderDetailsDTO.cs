@@ -1,6 +1,6 @@
 ﻿namespace shopdecor_api.Models.DTO.OrderDTO
 {
-    public class OrderItemDto
+    public class OrderDetailsDTO
     {
         public int SanPhamId { get; set; }
         public int SoLuong { get; set; }
