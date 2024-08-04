@@ -41,35 +41,15 @@ namespace shopdecor_api.Controllers
 			return Ok(test);
 			
 		}
-        [HttpPost("{CreateOrder}")]
-        public async Task<IActionResult> CreateOrder([FromBody] OrderCreateDto orderDto)
+        [HttpPost("CreateOrders")]
+        public async Task<IActionResult> CreateOrder(CreateOrderDTO orderDto)
         {
-            if (orderDto == null)
+            var result = await _orderRipository.CreateOrderAsync(orderDto);
+            if (result)
             {
-                return BadRequest("Dữ liệu đơn hàng không hợp lệ.");
+                return Ok(new { Message = "Order created successfully" });
             }
-
-            try
-            {
-                var order = await _orderRipository.CreateOrderAsync(orderDto);
-                return Ok(order);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Lỗi hệ thống: {ex.Message}");
-            }
-        }
-
-        [HttpGet("Getorder/{id}")]
-        public async Task<IActionResult> GetOrderById(int id)
-        {
-            var order = await _orderRipository.GetOrderByIdAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(order);
+            return BadRequest(new { Message = "Failed to create order" });
         }
 
 
