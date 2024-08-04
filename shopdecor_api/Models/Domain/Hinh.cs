@@ -9,5 +9,6 @@ namespace shopdecor_api.Models.Domain
         [Column(TypeName = "Varchar(max)")]
         public string? Link { get; set; }
         public virtual SanPham? SanPham { get; set; }
+        public virtual ApplicationUser? User { get; set; }
     }
 }

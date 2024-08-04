@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Models.Domain;
-using shopdecor_api.Models.DTO.ProductDTO;
 
 namespace shopdecor_api.Data
 {
@@ -22,8 +21,7 @@ namespace shopdecor_api.Data
         public DbSet<SanPham> SanPham { get; set; }
         public DbSet<SanPham_ChiTiet> SanPham_ChiTiet { get; set; }
         public DbSet<SanPham_Loai> SanPham_Loai { get; set; }
-        public DbSet<TaiKhoan> TaiKhoan { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
