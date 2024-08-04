@@ -9,8 +9,7 @@ namespace shopdecor_api.Repositories.OrderRepositories
 		Task<DonHang?> Updateorder(int id, byte status, string? un);
 		Task<DonHang?> GetorderAsync(int id);
 
-        Task<DonHang> CreateOrderAsync(OrderCreateDto orderDto);
-        Task<DonHang> GetOrderByIdAsync(int id);
+        Task<bool> CreateOrderAsync(CreateOrderDTO orderDto);
 
     }
 }
