@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using shopdecor_api.Data;
 
@@ -11,9 +12,11 @@ using shopdecor_api.Data;
 namespace shopdecor_api.Migrations
 {
     [DbContext(typeof(SeabugDbContext))]
-    partial class SeabugDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240805014605_ngày hủy null")]
+    partial class ngàyhủynull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -291,6 +294,9 @@ namespace shopdecor_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("DiaChi")
                         .HasColumnType("nvarchar(max)");
 
@@ -321,17 +327,14 @@ namespace shopdecor_api.Migrations
                     b.Property<bool>("TTThanhToan")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("TaiKhoanId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ThanhTien")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("KhuyenMaiMaGiamGia");
+                    b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("TaiKhoanId");
+                    b.HasIndex("KhuyenMaiMaGiamGia");
 
                     b.ToTable("DonHang");
                 });
@@ -385,9 +388,14 @@ namespace shopdecor_api.Migrations
                     b.Property<int?>("SanPhamId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SanPhamId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Hinh");
                 });
@@ -576,40 +584,6 @@ namespace shopdecor_api.Migrations
                     b.ToTable("SanPham_Loai");
                 });
 
-            modelBuilder.Entity("shopdecor_api.Models.Domain.TaiKhoan", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("DiaChi")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HoTen")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("LoaiTK")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("NgayTao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SDT")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TrangThai")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TaiKhoan");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -663,17 +637,17 @@ namespace shopdecor_api.Migrations
 
             modelBuilder.Entity("shopdecor_api.Models.Domain.DonHang", b =>
                 {
+                    b.HasOne("shopdecor_api.Models.Domain.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("shopdecor_api.Models.Domain.KhuyenMai", "KhuyenMai")
                         .WithMany("DonHangs")
                         .HasForeignKey("KhuyenMaiMaGiamGia");
 
-                    b.HasOne("shopdecor_api.Models.Domain.TaiKhoan", "TaiKhoan")
-                        .WithMany("DonHangs")
-                        .HasForeignKey("TaiKhoanId");
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("KhuyenMai");
-
-                    b.Navigation("TaiKhoan");
                 });
 
             modelBuilder.Entity("shopdecor_api.Models.Domain.DonHang_ChiTiet", b =>
@@ -697,7 +671,13 @@ namespace shopdecor_api.Migrations
                         .WithMany("Hinhs")
                         .HasForeignKey("SanPhamId");
 
+                    b.HasOne("shopdecor_api.Models.Domain.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("SanPham");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("shopdecor_api.Models.Domain.HoaDon", b =>
@@ -792,11 +772,6 @@ namespace shopdecor_api.Migrations
                     b.Navigation("SanPham_ChiTiets");
 
                     b.Navigation("SanPham_Loais");
-                });
-
-            modelBuilder.Entity("shopdecor_api.Models.Domain.TaiKhoan", b =>
-                {
-                    b.Navigation("DonHangs");
                 });
 #pragma warning restore 612, 618
         }
