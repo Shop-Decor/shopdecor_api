@@ -15,5 +15,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
         public Task<IdentityResult> UpdateUser(EditAccount account, string Id);
         public Task<IdentityResult> DeleteUser(string ID);
 
+        Task<ApplicationUser> GetAccountById(string accountId);
+
     }
 }

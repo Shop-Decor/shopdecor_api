@@ -1,7 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using shopdecor_api.Helper;
 using shopdecor_api.Models.Domain;
@@ -35,14 +32,14 @@ namespace shopdecor_api.Repositories.AccountRepositories
             var user = await userManager.FindByNameAsync(model.UserName);
             if (user == null)
             {
-                
+
                 string message = "1001";
 
-                return message ; 
+                return message;
             }
             if (!await userManager.CheckPasswordAsync(user, model.Password))
             {
-               string message = "1002";
+                string message = "1002";
                 return message;
             }
 
@@ -56,13 +53,16 @@ namespace shopdecor_api.Repositories.AccountRepositories
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
             //check role
 
             var userRoles = await userManager.GetRolesAsync(user);
             authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
-          
+
             //lấy giá trị roll = user hoặc role = admin
             var role = (userRoles.Select(role => new Claim(ClaimTypes.Name, role))).First().Value;
 
@@ -72,12 +72,12 @@ namespace shopdecor_api.Repositories.AccountRepositories
             var authKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
             var token = new JwtSecurityToken(
                 issuer: configuration["JWT:ValidIssuer"],
-                audience:role,
+                audience: role,
                 expires: DateTime.Now.AddDays(7),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha512)
             );
-           
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
@@ -88,7 +88,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 UserName = model.UserName,
                 FullName = model.FullName,
                 Email = model.Email,
-               
+
             };
             var result = await userManager.CreateAsync(user, model.Password);
 
@@ -160,7 +160,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
         {
             // Lấy tất cả người dùng từ UserManager
-            var users = userManager.Users.ToList().Where(x=> x.Status == true);
+            var users = userManager.Users.ToList().Where(x => x.Status == true);
             return await Task.FromResult(users);
         }
 
@@ -204,12 +204,12 @@ namespace shopdecor_api.Repositories.AccountRepositories
             {
                 return IdentityResult.Failed(new IdentityError { Description = "User not found." });
             }
-           //check giá trị có phù hợp như trong model không
-           if(!Regex.IsMatch(account.FullName, "^[a-zA-Z ]+$"))
+            //check giá trị có phù hợp như trong model không
+            if (!Regex.IsMatch(account.FullName, "^[a-zA-Z ]+$"))
             {
                 return IdentityResult.Failed(new IdentityError { Description = "Tên Người Dùng chỉ chứa kí tự chữ" });
             }
-           if (!Regex.IsMatch(account.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))
+            if (!Regex.IsMatch(account.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))
             {
                 return IdentityResult.Failed(new IdentityError { Description = "Email không hợp lệ" });
             }
@@ -222,7 +222,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
             var result = await userManager.UpdateAsync(user);
             return result;
         }
-       
+
 
         public async Task<IdentityResult> DeleteUser(string ID)
         {
@@ -234,6 +234,11 @@ namespace shopdecor_api.Repositories.AccountRepositories
             user.Status = false;
             var result = await userManager.UpdateAsync(user);
             return result;
+        }
+
+        public async Task<ApplicationUser> GetAccountById(string accountId)
+        {
+            return await userManager.FindByIdAsync(accountId);
         }
     }
 
