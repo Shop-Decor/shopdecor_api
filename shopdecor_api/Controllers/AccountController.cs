@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -17,8 +18,6 @@ namespace shopdecor_api.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountRepository accountRepo;
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly IConfiguration configuration;
         public AccountController(IAccountRepository repo)
         {
             accountRepo = repo;
@@ -33,7 +32,7 @@ namespace shopdecor_api.Controllers
                 return Ok(result.Succeeded);
             }
 
-            return StatusCode(500);
+            return Ok(result);
         }
         [HttpPost("SignIn")]
         public async Task<IActionResult> SignIn([FromBody] SignInModel signInModel)
@@ -96,7 +95,7 @@ namespace shopdecor_api.Controllers
 
             return Ok(users);
         }
-
+/*
         private async Task<ApplicationUser> ValidateTokenAndGetUserAsync(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -128,7 +127,7 @@ namespace shopdecor_api.Controllers
             }
 
             return null;
-        }
+        }*/
 
         [HttpPut("Delete/{Id}")]
         public async Task<IActionResult> Delete(string Id)
