@@ -5,8 +5,8 @@
         public int Id { get; set; }
         public int Gia { get; set; }
         public int SoLuong { get; set; }
-
-        public string? Size { get; set; }
-        public string? Color { get; set; }
+        public int? IdMauSac { get; set; }
+        public int? IdKichThuoc { get; set; }
+        public int SanPhamId { get; set; }
     }
 }

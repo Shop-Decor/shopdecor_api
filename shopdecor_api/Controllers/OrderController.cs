@@ -21,13 +21,15 @@ namespace shopdecor_api.Controllers
             _accountRepository = accountRepository;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> orderStatus(byte status)
-        {
-            var orderstatus = await _orderRipository.GetAlloderbystatus(status);
-            return Ok(orderstatus);
-        }
-
+		[HttpGet]
+		public async Task<IActionResult> orderStatus(byte status)
+		{
+			/*	var orderstatus = await _orderRipository.GetAlloderbystatus(status);
+				var maporderDTO = _mapper.Map<List<OrderDTO>>(orderstatus);*/
+			var orderstatus = await _orderRipository.GetAlloderbystatus(status);
+			return Ok(orderstatus);
+		}
+    
         [HttpPut("{id}")]
         public async Task<IActionResult> updatestatus(int id, byte status, string? un)
         {

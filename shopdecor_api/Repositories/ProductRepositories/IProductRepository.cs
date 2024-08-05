@@ -1,4 +1,5 @@
 ﻿using shopdecor_api.Models.Domain;
+using shopdecor_api.Models.DTO;
 
 namespace shopdecor_api.Repositories.ProductRepositories
 {
@@ -13,8 +14,7 @@ namespace shopdecor_api.Repositories.ProductRepositories
         Task AddImageAsync(Hinh hinh);
         Task<List<ProductDetail>> GetProductDetail(int SpId);
         Task<List<SanPham>> GetProductsByTypeId(int typeId);
-
-
+        public Task<SanPham> AddProductDetailAsync(ProductWithDetailsDTO productWithDetails);
 
     }
 }

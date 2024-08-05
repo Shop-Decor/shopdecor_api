@@ -61,6 +61,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
             //check role
 
             var userRoles = await userManager.GetRolesAsync(user);
+            var userID = user.Id;
             authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             //lấy giá trị roll = user hoặc role = admin
