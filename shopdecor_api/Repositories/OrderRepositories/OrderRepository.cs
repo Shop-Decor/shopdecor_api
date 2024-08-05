@@ -25,7 +25,7 @@ namespace shopdecor_api.Repositories.OrderRepositories
                 NgayTao = DateTime.UtcNow,
                 TTDonHang = 0,
                 TTThanhToan = orderDto.TTThanhToan,
-                ThanhTien = orderDto.OrderDetails.Sum(od => od.GiaSP * od.SoLuong),
+                ThanhTien = orderDto.ThanhTien,
             };
             await _db.DonHang.AddAsync(donHang);
             foreach (var x in orderDto.OrderDetails)

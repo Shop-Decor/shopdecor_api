@@ -7,6 +7,7 @@
         public string? SDT { get; set; }
         public string? Email { get; set; }
         public bool TTThanhToan { get; set; }
+        public int ThanhTien { get; set; }
         public List<OrderDetailsDTO>? OrderDetails { get; set; }
     }
 }
