@@ -2,10 +2,12 @@
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
+using shopdecor_api.Models.DTO.ColorDTO;
 using shopdecor_api.Models.DTO.DiscountDTO;
 using shopdecor_api.Models.DTO.OrderDetailDTO;
 using shopdecor_api.Models.DTO.OrderDTO;
 using shopdecor_api.Models.DTO.ProductDTO;
+using shopdecor_api.Models.DTO.SizeDTO;
 
 namespace shopdecor_api.Profiles
 {
@@ -16,7 +18,7 @@ namespace shopdecor_api.Profiles
             CreateMap<KhuyenMai, IndexDiscountDTO>().ReverseMap();
             CreateMap<KhuyenMai, UpdateDiscountDTO>().ReverseMap();
             CreateMap<KhuyenMai, AddDiscountDTO>().ReverseMap();
-            CreateMap<SanPham, AddProductRequest>().ReverseMap();
+            CreateMap<SanPham, ProductWithDetailsDTO>().ReverseMap();
             CreateMap<SanPham, IndexProductRequest>()
                 .ForMember(dest => dest.Hinhs, opt => opt.MapFrom(src => src.Hinhs.Select(h => h.Link)))
                 .ReverseMap();
@@ -35,8 +37,8 @@ namespace shopdecor_api.Profiles
             CreateMap<SanPham, UpdateProductRequest>().ReverseMap();
 
             CreateMap<SanPham_ChiTiet, IndexDTODetails>()
-                .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.MauSac.TenMauSac))
-                .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.KichThuoc.TenKichThuoc))
+                .ForMember(dest => dest.IdMauSac, opt => opt.MapFrom(src => src.MauSac.TenMauSac))
+                .ForMember(dest => dest.IdKichThuoc, opt => opt.MapFrom(src => src.KichThuoc.TenKichThuoc))
                 .ReverseMap()
                 .ForMember(dest => dest.MauSac, opt => opt.Ignore())
                 .ForMember(dest => dest.KichThuoc, opt => opt.Ignore());
@@ -54,6 +56,9 @@ namespace shopdecor_api.Profiles
             .ForMember(dest => dest.LoaiSPs, opt => opt.MapFrom(src => src.Select(sp => sp.LoaiSP.Id)));
             CreateMap<DonHang, OrderDTO>().ReverseMap();
             CreateMap<DonHang_ChiTiet, OrderDetailDTO>().ReverseMap();
+            CreateMap<MauSac, ColorDTO>().ReverseMap();
+            CreateMap<KichThuoc, SizeDTO>().ReverseMap();
+
         }
     }
 }

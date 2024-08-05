@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using shopdecor_api.Models.Domain;
+using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
 using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Repositories.DiscountRepositories;
@@ -44,29 +45,24 @@ namespace shopdecor_api.Controllers
             return Ok(maps);
         }
         [HttpPost]
-        public async Task<IActionResult> AddNewProducts([FromBody] AddProductRequest model)
+        public async Task<IActionResult> AddNewProduct([FromBody] ProductWithDetailsDTO model)
         {
             try
             {
-                var productDTO = _mapper.Map<SanPham>(model);
-                if (model.MaGiamGia != null)
+                var addedProduct = await _productRepository.AddProductDetailAsync(model);
+
+                if (model.Hinhs?.Count() > 0)
                 {
-                    var discount = await _discountRepository.GetAsync(model.MaGiamGia);
-                    productDTO.KhuyenMai = discount;
-                }
-                var product = await _productRepository.AddProductsAsync(productDTO);
-                if (model.Img.Count() > 0)
-                {
-                    foreach (var item in model.Img)
+                    foreach (var item in model.Hinhs)
                     {
-                        await _imageRepository.AddImageByProductAsync(item, product);
+                        await _imageRepository.AddImageByProductAsync(item, addedProduct);
                     }
                 }
-                return Ok(product);
+                return NoContent();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(new { message = "Có lỗi xảy ra khi xử lý yêu cầu.", details = ex.Message });
             }
         }
 

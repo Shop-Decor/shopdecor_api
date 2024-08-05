@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Data;
 using shopdecor_api.Models.Domain;
+using shopdecor_api.Models.DTO;
 
 namespace shopdecor_api.Repositories.ProductRepositories
 {
@@ -112,6 +113,37 @@ namespace shopdecor_api.Repositories.ProductRepositories
         public async Task<List<SanPham>> GetProductsByTypeId(int typeId)
         {
             return await _db.SanPham_Loai.Where(x => x.LoaiSP.Id == typeId).Select(x => x.SanPham).ToListAsync();
+        }
+
+        public async Task<SanPham> AddProductDetailAsync(ProductWithDetailsDTO productWithDetails)
+        {
+            var product = new SanPham
+            {
+                Ten = productWithDetails.Ten,
+                MoTa = productWithDetails.MoTa,
+                NgayTao = DateTime.Now,
+                TrangThai = true
+
+
+            };
+            await _db.SanPham.AddAsync(product);
+            foreach (var item in productWithDetails.ChiTietSanPham)
+            {
+                var cl = await _db.MauSac.FirstOrDefaultAsync(x => x.Id == item.IdMauSac);
+                var sz = await _db.KichThuoc.FirstOrDefaultAsync(x => x.Id == item.IdKichThuoc);
+
+                var spct = new SanPham_ChiTiet()
+                {
+                    Gia = item.Gia,
+                    SoLuong = item.SoLuong,
+                    KichThuoc = sz,
+                    MauSac = cl,
+                    SanPham = product
+                };
+                await _db.SanPham_ChiTiet.AddAsync(spct);
+            }
+            await _db.SaveChangesAsync();
+            return product;
         }
     }
 }
