@@ -61,6 +61,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
             //check role
 
             var userRoles = await userManager.GetRolesAsync(user);
+            var userID = user.Id;
             authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
           
             //lấy giá trị roll = user hoặc role = admin
@@ -71,8 +72,8 @@ namespace shopdecor_api.Repositories.AccountRepositories
 
             var authKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
             var token = new JwtSecurityToken(
-                issuer: configuration["JWT:ValidIssuer"],
-                audience:role,
+                issuer: userID,
+                audience: role,
                 expires: DateTime.Now.AddDays(7),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha512)
