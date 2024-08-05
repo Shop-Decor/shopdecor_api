@@ -16,5 +16,7 @@ namespace shopdecor_api.Repositories.ProductRepositories
         Task<List<SanPham>> GetProductsByTypeId(int typeId);
         public Task<SanPham> AddProductDetailAsync(ProductWithDetailsDTO productWithDetails);
 
+        Task<IEnumerable<SanPham>> GetAllProductUsers();
+
     }
 }

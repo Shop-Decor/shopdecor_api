@@ -120,7 +120,7 @@ namespace shopdecor_api.Controllers
         [HttpGet("User")]
         public async Task<IActionResult> GetAllUserProducts()
         {
-            var product = await _productRepository.GetAllAsync();
+            var product = await _productRepository.GetAllProductUsers();
             var map = _mapper.Map<List<GetUserProduct>>(product);
             return Ok(map);
         }

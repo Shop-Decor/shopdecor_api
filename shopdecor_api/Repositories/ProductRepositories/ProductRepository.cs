@@ -145,5 +145,10 @@ namespace shopdecor_api.Repositories.ProductRepositories
             await _db.SaveChangesAsync();
             return product;
         }
+
+        public async Task<IEnumerable<SanPham>> GetAllProductUsers()
+        {
+            return await _db.SanPham.Where(x => x.TrangThai == true).ToListAsync();
+        }
     }
 }
