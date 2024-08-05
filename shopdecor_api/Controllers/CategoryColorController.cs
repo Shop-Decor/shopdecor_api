@@ -1,28 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using shopdecor_api.Models.Domain;
-using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.ColorDTO;
 using shopdecor_api.Repositories.CategoryColorRepositories;
 
 namespace shopdecor_api.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("api/[controller]")]
 
 	public class CategoryColorController : Controller
 	{
 		private readonly ICategoryColorRepositories _categoryColorRepositories;
+		private readonly IMapper _mapper;
 
-		public CategoryColorController(ICategoryColorRepositories CategoryColorRepositories)
+		public CategoryColorController(ICategoryColorRepositories CategoryColorRepositories, IMapper mapper)
 		{
 			_categoryColorRepositories = CategoryColorRepositories;
+			_mapper = mapper;
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> GetAllColor()
 		{
+
 			var category = await _categoryColorRepositories.GetAllAsync();
-			return Ok(category);
+			var map = _mapper.Map<List<ColorDTO>>(category);
+			return Ok(map);
 		}
 
 		[HttpPost]

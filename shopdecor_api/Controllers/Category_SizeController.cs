@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using shopdecor_api.Models.Domain;
 
 using shopdecor_api.Models.DTO.SizeDTO;
@@ -7,23 +8,26 @@ using shopdecor_api.Repositories.Category_SizeRepositories;
 
 namespace shopdecor_api.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("api/[controller]")]
 
 	public class Category_SizeController : Controller
 	{
 		private readonly ICategory_SizeRepositories _categorySizeRepository;
+		private readonly IMapper _mapper;
 
-		public Category_SizeController(ICategory_SizeRepositories categorySizeRepository)
+		public Category_SizeController(ICategory_SizeRepositories categorySizeRepository, IMapper mapper)
 		{
 			_categorySizeRepository = categorySizeRepository;
+			_mapper = mapper;
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> GetAllSize()
 		{
 			var category = await _categorySizeRepository.GetAllAsync();
-			return Ok(category);
+			var map = _mapper.Map<List<SizeDTO>>(category);
+			return Ok(map);
 		}
 
 		[HttpPost]
