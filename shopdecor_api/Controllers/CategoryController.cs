@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using shopdecor_api.Models.Domain;
+using shopdecor_api.Models.DTO.CategoryDTO;
 using shopdecor_api.Models.DTO.TypeDTO;
 using shopdecor_api.Repositories.CategoryRepositories;
 
@@ -24,7 +25,8 @@ namespace shopdecor_api.Controllers
         public async Task<IActionResult> GetAllProductType()
         {
             var category = await _categoryRepository.GetAllAsync();
-            return Ok(category);
+            var categoriesDTO = _mapper.Map<List<GetCategoriesOnUser>>(category);
+            return Ok(categoriesDTO);
         }
 
         [HttpPost]

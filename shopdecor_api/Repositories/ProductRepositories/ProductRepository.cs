@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Data;
+using shopdecor_api.Helper;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
 
@@ -64,12 +65,6 @@ namespace shopdecor_api.Repositories.ProductRepositories
             return product;
         }
 
-        public async Task AddImageAsync(Hinh hinh)
-        {
-            _db.Hinh.Add(hinh);
-            await _db.SaveChangesAsync();
-        }
-
         public async Task<List<ProductDetail>> GetProductDetail(int spId)
         {
             var query = @"
@@ -110,7 +105,7 @@ namespace shopdecor_api.Repositories.ProductRepositories
 
             return productDetails;
         }
-        public async Task<List<SanPham>> GetProductsByTypeId(int typeId)
+        public async Task<IEnumerable<SanPham>> GetProductsByTypeId(int typeId)
         {
             return await _db.SanPham_Loai.Where(x => x.LoaiSP.Id == typeId).Select(x => x.SanPham).ToListAsync();
         }
@@ -149,6 +144,16 @@ namespace shopdecor_api.Repositories.ProductRepositories
         public async Task<IEnumerable<SanPham>> GetAllProductUsers()
         {
             return await _db.SanPham.Where(x => x.TrangThai == true).ToListAsync();
+        }
+
+        public async Task<PagedResult<SanPham>> GetPagedProductsAsync(int? typeId, int page, int pageSize)
+        {
+            if (typeId == null)
+            {
+                return await _db.SanPham.Where(x => x.TrangThai == true).GetPagedAsync(page, pageSize);
+            }
+            return await _db.SanPham_Loai.Where(x => x.LoaiSP.Id == typeId && x.SanPham.TrangThai == true).Select(x => x.SanPham).GetPagedAsync(page, pageSize);
+
         }
     }
 }
