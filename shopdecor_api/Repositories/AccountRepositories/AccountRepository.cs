@@ -117,6 +117,8 @@ namespace shopdecor_api.Repositories.AccountRepositories
 
             try
             {
+                // Ghi log token để kiểm tra định dạng
+                Console.WriteLine($"Token received: {token}");
                 var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -134,9 +136,15 @@ namespace shopdecor_api.Repositories.AccountRepositories
                     return await userManager.FindByIdAsync(userId);
                 }
             }
-            catch
+            catch(SecurityTokenMalformedException ex)
             {
+                Console.WriteLine($"Token malformed: {ex.Message}");
                 // Optionally, log the exception or handle it as needed
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Ghi log lỗi hoặc xử lý nếu cần
             }
 
             return null;
@@ -241,6 +249,22 @@ namespace shopdecor_api.Repositories.AccountRepositories
         {
             return await userManager.FindByIdAsync(accountId);
         }
+
+        public async Task<IdentityResult> ChangePassword(string id,ChangePasswordModel model)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+            }
+           
+            //check giá trị có phù hợp như trong model không
+            var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+            return result;
+        }
+
+
     }
 
 
