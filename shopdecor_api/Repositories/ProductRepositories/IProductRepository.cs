@@ -1,4 +1,5 @@
-﻿using shopdecor_api.Models.Domain;
+﻿using shopdecor_api.Helper;
+using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
 
 namespace shopdecor_api.Repositories.ProductRepositories
@@ -11,12 +12,14 @@ namespace shopdecor_api.Repositories.ProductRepositories
 
         Task<SanPham>? UpdateProductsAsync(int id, SanPham model);
         Task<SanPham>? DeleteProductsAsync(int id);
-        Task AddImageAsync(Hinh hinh);
+
         Task<List<ProductDetail>> GetProductDetail(int SpId);
-        Task<List<SanPham>> GetProductsByTypeId(int typeId);
+        Task<IEnumerable<SanPham>> GetProductsByTypeId(int typeId);
         public Task<SanPham> AddProductDetailAsync(ProductWithDetailsDTO productWithDetails);
 
         Task<IEnumerable<SanPham>> GetAllProductUsers();
+
+        Task<PagedResult<SanPham>> GetPagedProductsAsync(int? typeId, int page, int pageSize);
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using shopdecor_api.Helper;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
@@ -117,13 +118,13 @@ namespace shopdecor_api.Controllers
             return NoContent();
         }
 
-        [HttpGet("User")]
-        public async Task<IActionResult> GetAllUserProducts()
-        {
-            var product = await _productRepository.GetAllProductUsers();
-            var map = _mapper.Map<List<GetUserProduct>>(product);
-            return Ok(map);
-        }
+        //[HttpGet("User/category")]
+        //public async Task<IActionResult> GetAllUserProducts([FromQuery] int? LoaiId)
+        //{
+        //    var products = (LoaiId == null) ? await _productRepository.GetAllProductUsers() : await _productRepository.GetProductsByTypeId((int)LoaiId);
+        //    var map = _mapper.Map<List<GetUserProduct>>(products);
+        //    return Ok(map);
+        //}
 
         [HttpGet("getproductdetail")]
         public async Task<IActionResult> getproductdetailbyproduct(int spId)
@@ -147,11 +148,21 @@ namespace shopdecor_api.Controllers
 
             if (allProducts == null || !allProducts.Any())
             {
-                return NotFound(new { Message = "No products found for the given type ID." });
+                return NotFound(new { Message = "Không có sản phẩm nào" });
             }
             var distinctProducts = allProducts.Where(x => x.Id != SpId).Distinct().ToList();
             var productDTO = _mapper.Map<List<GetUserProduct>>(distinctProducts);
             return Ok(productDTO);
+        }
+
+        [HttpGet("user/category")]
+        public async Task<IActionResult> GetProductByCategory([FromQuery] int? LoaiId, [FromQuery] PaginationParams paginationParams)
+        {
+            paginationParams.PageNumber = paginationParams.PageNumber < 1 ? 1 : paginationParams.PageNumber;
+            paginationParams.PageSize = 12;
+            var products = await _productRepository.GetPagedProductsAsync(LoaiId, paginationParams.PageNumber, paginationParams.PageSize);
+            var map = _mapper.Map<GetUserProductPaginationDTO>(products);
+            return Ok(map);
         }
 
     }
