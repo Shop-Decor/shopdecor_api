@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace shopdecor_api.Migrations
 {
     /// <inheritdoc />
-    public partial class newdatabase : Migration
+    public partial class updatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,6 +34,7 @@ namespace shopdecor_api.Migrations
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     DateCreated = table.Column<DateOnly>(type: "date", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Link = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -227,6 +228,7 @@ namespace shopdecor_api.Migrations
                     LyDoHuy = table.Column<string>(type: "Nvarchar(max)", nullable: true),
                     ThanhTien = table.Column<int>(type: "int", nullable: false),
                     TTDonHang = table.Column<byte>(type: "tinyint", nullable: false),
+                    PTThanhToan = table.Column<bool>(type: "bit", nullable: false),
                     TTThanhToan = table.Column<bool>(type: "bit", nullable: false),
                     HoTen = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DiaChi = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -326,17 +328,11 @@ namespace shopdecor_api.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Link = table.Column<string>(type: "Varchar(max)", nullable: true),
-                    SanPhamId = table.Column<int>(type: "int", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    SanPhamId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Hinh", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Hinh_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Hinh_SanPham_SanPhamId",
                         column: x => x.SanPhamId,
@@ -463,11 +459,6 @@ namespace shopdecor_api.Migrations
                 name: "IX_Hinh_SanPhamId",
                 table: "Hinh",
                 column: "SanPhamId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Hinh_UserId",
-                table: "Hinh",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HoaDon_DonHangId",

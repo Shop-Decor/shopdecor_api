@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace shopdecor_api.Models.Domain
 {
@@ -12,6 +11,7 @@ namespace shopdecor_api.Models.Domain
         public DateOnly DateCreated { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         //Địa chỉ
         public string? Address { get; set; }
+        public string? Link { get; set; }
 
     }
 }
