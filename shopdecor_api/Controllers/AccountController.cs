@@ -32,7 +32,8 @@ namespace shopdecor_api.Controllers
                 return Ok(result.Succeeded);
             }
 
-            return Ok(result);
+
+            return Ok(result.Errors.FirstOrDefault().Description);
         }
         [HttpPost("SignIn")]
         public async Task<IActionResult> SignIn([FromBody] SignInModel signInModel)
@@ -65,7 +66,7 @@ namespace shopdecor_api.Controllers
 
         [HttpPut("{Id}")]
 
-        public async Task<IActionResult> Update([FromBody] EditAccount account, string Id)
+        public async Task<IActionResult> Update(string Id, [FromBody] EditAccount account)
         {
             var result = await accountRepo.UpdateUser(account,Id);
 
@@ -75,7 +76,7 @@ namespace shopdecor_api.Controllers
                 return Ok(result.Succeeded);
             }
 
-            return Ok(new { Token = result });
+            return Ok(result.Errors.FirstOrDefault().Description);
 
         }
 
