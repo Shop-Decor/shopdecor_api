@@ -12,7 +12,7 @@ using shopdecor_api.Data;
 namespace shopdecor_api.Migrations
 {
     [DbContext(typeof(SeabugDbContext))]
-    [Migration("20240808175947_updatabase")]
+    [Migration("20240808180635_updatabase")]
     partial class updatabase
     {
         /// <inheritdoc />
@@ -320,6 +320,9 @@ namespace shopdecor_api.Migrations
 
                     b.Property<DateTime>("NgayTao")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("PTThanhToan")
+                        .HasColumnType("bit");
 
                     b.Property<string>("SDT")
                         .HasColumnType("nvarchar(max)");

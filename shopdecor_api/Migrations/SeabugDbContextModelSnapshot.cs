@@ -318,6 +318,9 @@ namespace shopdecor_api.Migrations
                     b.Property<DateTime>("NgayTao")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("PTThanhToan")
+                        .HasColumnType("bit");
+
                     b.Property<string>("SDT")
                         .HasColumnType("nvarchar(max)");
 

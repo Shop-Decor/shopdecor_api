@@ -228,6 +228,7 @@ namespace shopdecor_api.Migrations
                     LyDoHuy = table.Column<string>(type: "Nvarchar(max)", nullable: true),
                     ThanhTien = table.Column<int>(type: "int", nullable: false),
                     TTDonHang = table.Column<byte>(type: "tinyint", nullable: false),
+                    PTThanhToan = table.Column<bool>(type: "bit", nullable: false),
                     TTThanhToan = table.Column<bool>(type: "bit", nullable: false),
                     HoTen = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DiaChi = table.Column<string>(type: "nvarchar(max)", nullable: true),
