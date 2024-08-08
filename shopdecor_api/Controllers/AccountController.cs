@@ -96,7 +96,6 @@ namespace shopdecor_api.Controllers
             return Ok(users);
         }
         [HttpGet("GetUser")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetUser()
         {
             string token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
