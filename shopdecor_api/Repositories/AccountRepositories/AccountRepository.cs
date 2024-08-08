@@ -49,6 +49,8 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 string message = "1003";
                 return message;
             }
+            //get role 
+           
 
             var authClaims = new List<Claim>
             {
@@ -56,7 +58,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.Name, user.UserName),
             };
             //check role
 
@@ -73,7 +75,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
             var authKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
             var token = new JwtSecurityToken(
                 issuer: configuration["JWT:ValidIssuer"],
-                audience: role,
+                audience: configuration["JWT:ValidAudience"],
                 expires: DateTime.Now.AddDays(7),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha512)
