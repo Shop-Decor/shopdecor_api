@@ -127,6 +127,7 @@ namespace shopdecor_api.Repositories.ProductRepositories
 
             };
             await _db.SanPham.AddAsync(product);
+            await _db.SaveChangesAsync();
             foreach (var item in productWithDetails.ChiTietSanPham)
             {
                 var cl = await _db.MauSac.FirstOrDefaultAsync(x => x.Id == item.IdMauSac);

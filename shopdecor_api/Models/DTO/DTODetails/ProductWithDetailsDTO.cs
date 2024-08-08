@@ -8,7 +8,7 @@
         public DateTime NgayTao { get; set; }
         // 1: đang bán, 0: ngừng bán
         public bool TrangThai { get; set; }
-        public List<string>? Hinhs { get; set; }
+        public List<string>? hinhs { get; set; }
         public List<IndexDTODetails>? ChiTietSanPham { get; set; }
     }
 }

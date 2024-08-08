@@ -14,7 +14,7 @@ namespace shopdecor_api.Repositories.OrderRepositories
             _db = db;
         }
 
-        public async Task<bool> CreateOrderAsync(CreateOrderDTO orderDto)
+        public async Task<DonHang> CreateOrderAsync(CreateOrderDTO orderDto)
         {
             var donHang = new DonHang
             {
@@ -42,8 +42,9 @@ namespace shopdecor_api.Repositories.OrderRepositories
                 };
                 await _db.DonHang_ChiTiet.AddAsync(spct);
             }
+            await _db.SaveChangesAsync();
 
-            return await _db.SaveChangesAsync() > 0;
+            return  donHang;
         }
 
         public async Task<IEnumerable<DonHang>> GetAlloderbystatus(byte status)
