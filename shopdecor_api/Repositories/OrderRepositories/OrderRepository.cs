@@ -59,8 +59,7 @@ namespace shopdecor_api.Repositories.OrderRepositories
 
         public async Task<IEnumerable<DonHang>?> GetOtherByIdAccountAndStatusAsync(ApplicationUser account, byte? status)
         {
-            return null;
-            /*return await _db.DonHang.Where(x => x.ApplicationUser == account && (status == null || x.TTDonHang == status)).ToListAsync();*/
+            return await _db.DonHang.Where(x => x.ApplicationUser == account && (status == null || x.TTDonHang == status)).ToListAsync();
         }
 
         public async Task<DonHang?> Updateorder(int id, byte status, string? un)
@@ -85,9 +84,8 @@ namespace shopdecor_api.Repositories.OrderRepositories
         }
         public async Task<DonHang?> GetOtherByIdAccountAndIdOrderAsync(ApplicationUser account, DonHang donHang)
         {
-            return null;
-            /*return await _db.DonHang.FirstOrDefaultAsync(x => x.ApplicationUser == account && x.Id == donHang.Id);*/
-           
+            return await _db.DonHang.FirstOrDefaultAsync(x => x.ApplicationUser == account && x.Id == donHang.Id);
+
         }
     }
 }
