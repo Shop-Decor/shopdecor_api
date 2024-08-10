@@ -12,7 +12,7 @@ namespace shopdecor_api.Repositories.ProductRepositories
 
         Task<SanPham>? UpdateProductsAsync(int id, SanPham model);
         Task<SanPham>? DeleteProductsAsync(int id);
-
+        Task AddImageAsync(Hinh hinh);
         Task<List<ProductDetail>> GetProductDetail(int SpId);
         Task<IEnumerable<SanPham>> GetProductsByTypeId(int typeId);
         public Task<SanPham> AddProductDetailAsync(ProductWithDetailsDTO productWithDetails);
@@ -20,6 +20,7 @@ namespace shopdecor_api.Repositories.ProductRepositories
         Task<IEnumerable<SanPham>> GetAllProductUsers();
 
         Task<PagedResult<SanPham>> GetPagedProductsAsync(int? typeId, int page, int pageSize);
+        IQueryable<SanPham> GetQueryable();
 
     }
 }
