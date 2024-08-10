@@ -65,6 +65,12 @@ namespace shopdecor_api.Repositories.ProductRepositories
             return product;
         }
 
+        public async Task AddImageAsync(Hinh hinh)
+        {
+            _db.Hinh.Add(hinh);
+            await _db.SaveChangesAsync();
+        }
+
         public async Task<List<ProductDetail>> GetProductDetail(int spId)
         {
             var query = @"
@@ -122,10 +128,11 @@ namespace shopdecor_api.Repositories.ProductRepositories
 
             };
             await _db.SanPham.AddAsync(product);
+            await _db.SaveChangesAsync();
             foreach (var item in productWithDetails.ChiTietSanPham)
             {
-                var cl = await _db.MauSac.FirstOrDefaultAsync(x => x.Id == item.IdMauSac);
-                var sz = await _db.KichThuoc.FirstOrDefaultAsync(x => x.Id == item.IdKichThuoc);
+                var cl = await _db.MauSac.FirstOrDefaultAsync(x => x.Id == item.MauSacId);
+                var sz = await _db.KichThuoc.FirstOrDefaultAsync(x => x.Id == item.KichThuocId);
 
                 var spct = new SanPham_ChiTiet()
                 {
@@ -154,6 +161,11 @@ namespace shopdecor_api.Repositories.ProductRepositories
             }
             return await _db.SanPham_Loai.Where(x => x.LoaiSP.Id == typeId && x.SanPham.TrangThai == true).Select(x => x.SanPham).GetPagedAsync(page, pageSize);
 
+        }
+
+        public IQueryable<SanPham> GetQueryable()
+        {
+            return _db.SanPham.AsQueryable();
         }
     }
 }

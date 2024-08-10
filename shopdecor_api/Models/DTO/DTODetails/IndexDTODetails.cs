@@ -5,8 +5,8 @@
         public int Id { get; set; }
         public int Gia { get; set; }
         public int SoLuong { get; set; }
-        public int? IdMauSac { get; set; }
-        public int? IdKichThuoc { get; set; }
+        public int? MauSacId { get; set; }
+        public int? KichThuocId { get; set; }
         public int SanPhamId { get; set; }
     }
 }
