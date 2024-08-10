@@ -20,7 +20,7 @@ namespace shopdecor_api.Controllers
         private readonly IAccountRepository accountRepo;
         public AccountController(IAccountRepository repo)
         {
-            accountRepo = repo;
+            this.accountRepo = repo;
         }
         [HttpPost("SignUp")]
         public async Task<IActionResult> SignUp(SignUpModel signUpModel)
@@ -32,7 +32,8 @@ namespace shopdecor_api.Controllers
                 return Ok(result.Succeeded);
             }
 
-            return Ok(result);
+
+            return Ok(result.Errors.FirstOrDefault().Description);
         }
         [HttpPost("SignIn")]
         public async Task<IActionResult> SignIn([FromBody] SignInModel signInModel)
@@ -65,7 +66,7 @@ namespace shopdecor_api.Controllers
 
         [HttpPut("{Id}")]
 
-        public async Task<IActionResult> Update([FromBody] EditAccount account, string Id)
+        public async Task<IActionResult> Update(string Id, [FromBody] EditAccount account)
         {
             var result = await accountRepo.UpdateUser(account,Id);
 
@@ -75,7 +76,7 @@ namespace shopdecor_api.Controllers
                 return Ok(result.Succeeded);
             }
 
-            return Ok(new { Token = result });
+            return Ok(result.Errors.FirstOrDefault().Description);
 
         }
 
@@ -95,44 +96,41 @@ namespace shopdecor_api.Controllers
 
             return Ok(users);
         }
-/*
-        private async Task<ApplicationUser> ValidateTokenAndGetUserAsync(string token)
+        [HttpGet("GetUser")]
+        public async Task<IActionResult> GetUser()
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(configuration["JWT:Secret"]);
-
-            try
+            string token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            if (string.IsNullOrEmpty(token))
             {
-                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration["JWT:ValidIssuer"],
-                    ValidAudience = configuration["JWT:ValidAudience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
-                }, out SecurityToken validatedToken);
-
-                var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-                if (userId != null)
-                {
-                    return await userManager.FindByIdAsync(userId);
-                }
-            }
-            catch
-            {
-                // Handle the exception as needed
+                return BadRequest("Token is missing");
             }
 
-            return null;
-        }*/
-
+            var user = await accountRepo.ValidateTokenAndGetUserAsync(token);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            return Unauthorized();
+        }
         [HttpPut("Delete/{Id}")]
         public async Task<IActionResult> Delete(string Id)
         {
             var result = await accountRepo.DeleteUser( Id);
+
+            if (result.Succeeded)
+            {
+
+                return Ok(result.Succeeded);
+            }
+
+            return Ok(new { Token = result });
+        }
+
+
+        [HttpPut("ChangePass/{id}")]
+        public async Task<IActionResult> ChangePass(string id, [FromBody] ChangePasswordModel changePasswordModel)
+        {
+            var result = await accountRepo.ChangePassword(id, changePasswordModel);
 
             if (result.Succeeded)
             {

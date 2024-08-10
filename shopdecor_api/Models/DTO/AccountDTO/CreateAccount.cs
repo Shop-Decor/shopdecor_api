@@ -16,9 +16,7 @@ namespace shopdecor_api.Models.DTO.AccountDTO
         public string Password { get; set; } = null!;
         [Required]
         public string ConfirmPassword { get; set; } = null!;
-        [Required]
         public string? PhoneNumber { get; set;} = null!;
-        [Required]
         public string? Address { get; set; } = null!;
     }
 }

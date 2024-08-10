@@ -234,6 +234,9 @@ namespace shopdecor_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Link")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -315,6 +318,9 @@ namespace shopdecor_api.Migrations
                     b.Property<DateTime>("NgayTao")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("PTThanhToan")
+                        .HasColumnType("bit");
+
                     b.Property<string>("SDT")
                         .HasColumnType("nvarchar(max)");
 
@@ -385,14 +391,9 @@ namespace shopdecor_api.Migrations
                     b.Property<int?>("SanPhamId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SanPhamId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Hinh");
                 });
@@ -668,13 +669,7 @@ namespace shopdecor_api.Migrations
                         .WithMany("Hinhs")
                         .HasForeignKey("SanPhamId");
 
-                    b.HasOne("shopdecor_api.Models.Domain.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
                     b.Navigation("SanPham");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("shopdecor_api.Models.Domain.HoaDon", b =>

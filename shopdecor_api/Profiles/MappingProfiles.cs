@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using shopdecor_api.Helper;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
+using shopdecor_api.Models.DTO.CategoryDTO;
 using shopdecor_api.Models.DTO.ColorDTO;
 using shopdecor_api.Models.DTO.DiscountDTO;
 using shopdecor_api.Models.DTO.OrderDetailDTO;
@@ -20,7 +22,7 @@ namespace shopdecor_api.Profiles
             CreateMap<KhuyenMai, UpdateDiscountDTO>().ReverseMap();
 
             CreateMap<KhuyenMai, AddDiscountDTO>().ReverseMap();
-            
+
             CreateMap<SanPham, ProductWithDetailsDTO>().ReverseMap();
 
             CreateMap<SanPham, IndexProductRequest>()
@@ -85,8 +87,12 @@ namespace shopdecor_api.Profiles
                 .ReverseMap();
 
             CreateMap<MauSac, ColorDTO>().ReverseMap();
-            
+
             CreateMap<KichThuoc, SizeDTO>().ReverseMap();
+
+            CreateMap<LoaiSP, GetCategoriesOnUser>().ReverseMap();
+
+            CreateMap<PagedResult<SanPham>, GetUserProductPaginationDTO>().ReverseMap();
 
         }
     }
