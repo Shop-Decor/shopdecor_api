@@ -17,6 +17,7 @@ using shopdecor_api.Repositories.OrderRepositories;
 using shopdecor_api.Repositories.Product_CategoryRepositories;
 using shopdecor_api.Repositories.ProductDetailsRepositories;
 using shopdecor_api.Repositories.ProductRepositories;
+using shopdecor_api.Services;
 using System.Text;
 
 
@@ -81,6 +82,8 @@ builder.Services.AddScoped<IProductDetailsRepositories, ProductDetailsRepositori
 builder.Services.AddScoped<IProduct_CategoryRepository, Product_CategoryRepository>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
+
+
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<SeabugDbContext>()
     .AddDefaultTokenProviders();
@@ -103,19 +106,29 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };
 });
+builder.Services.AddSingleton<IVnPayService, VnPayService>();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("*")
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+    });
+});
+
 
 var app = builder.Build();
 
-app.UseCors(options =>
-{
-    options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-});
+
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors();
 
 app.UseHttpsRedirection();
 

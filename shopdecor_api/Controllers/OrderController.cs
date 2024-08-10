@@ -45,12 +45,17 @@ namespace shopdecor_api.Controllers
         public async Task<IActionResult> CreateOrder(CreateOrderDTO orderDto)
         {
             var result = await _orderRipository.CreateOrderAsync(orderDto);
-            if (result)
+            if(result == null)
             {
-                return Ok(new { Message = "Order created successfully" });
+                return BadRequest();
             }
-            return BadRequest(new { Message = "Failed to create order" });
+            else
+            {
+                return Ok(result.Id);
+            }
         }
+
+
 
         [HttpGet("user")]
         public async Task<IActionResult> GetOrderByUser([FromQuery] string accountId, [FromQuery] byte? status)

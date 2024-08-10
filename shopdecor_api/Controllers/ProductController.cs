@@ -52,9 +52,9 @@ namespace shopdecor_api.Controllers
             {
                 var addedProduct = await _productRepository.AddProductDetailAsync(model);
 
-                if (model.Hinhs?.Count() > 0)
+                if (model.hinhs.Count() > 0)
                 {
-                    foreach (var item in model.Hinhs)
+                    foreach (var item in model.hinhs)
                     {
                         await _imageRepository.AddImageByProductAsync(item, addedProduct);
                     }
