@@ -40,8 +40,23 @@ namespace shopdecor_api.Controllers
             }
             return Ok(test);
         }
+		[HttpPut]
+		public async Task<IActionResult> updatestatues(int id, byte status, bool statuspay)
+		{
 
-        [HttpPost("CreateOrders")]
+
+			var test = await _orderRipository.Updateorderss(id, status, statuspay);
+			if (test == null)
+			{
+				return BadRequest();
+			}
+
+			return Ok(test);
+
+
+		}
+
+		[HttpPost("CreateOrders")]
         public async Task<IActionResult> CreateOrder(CreateOrderDTO orderDto)
         {
             var result = await _orderRipository.CreateOrderAsync(orderDto);
