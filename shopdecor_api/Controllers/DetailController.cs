@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
+using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Repositories.ProductDetailsRepositories;
 
 namespace shopdecor_api.Controllers
@@ -89,7 +90,7 @@ namespace shopdecor_api.Controllers
 
 
         // PUT api/productdetails/{id}
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<ActionResult> Update([FromBody] DTOUpdateProductDetails dto)
         {
             try
