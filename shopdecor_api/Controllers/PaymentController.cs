@@ -65,11 +65,8 @@ namespace shopdecor_api.Controllers
         [HttpGet("payment-callback")]
         public async Task<IActionResult> PaymentCallback()
         {
-
             var vnp_HashSecret = _configuration["Vnpay:HashSecret"];
-
             var vnpayData = HttpContext.Request.Query;
-
             VnPayLibrary vnpay = new VnPayLibrary();
 
             foreach (var (key, value) in vnpayData)
@@ -85,20 +82,24 @@ namespace shopdecor_api.Controllers
             if (vnpay.ValidateSignature(inputHash, vnp_HashSecret))
             {
                 string id = vnpayData["vnp_TxnRef"];
-
                 string? code = vnpayData["vnp_ResponseCode"];
-                if(code == "00")
+                if (code == "00")
                 {
                     var dh = await _db.DonHang.FirstOrDefaultAsync(x => x.Id.ToString() == id);
-                    dh.TTDonHang = 1;
-                    await _db.SaveChangesAsync();
+                    if (dh != null)
+                    {
+                        dh.TTDonHang = 1; // Cập nhật trạng thái đơn hàng thành công
+                        await _db.SaveChangesAsync();
+                    }
+                    return Redirect($"http://localhost:3000/?paymentStatus=success");
                 }
                 else
                 {
-                    return BadRequest(new { message = "Invalid signature" });
+                    return Redirect($"http://localhost:3000/payment/?paymentStatus=failure");
                 }
             }
-            return BadRequest(new { message = "No data received" });
+            return Redirect($"http://localhost:3000/payment/?paymentStatus=failure");
         }
+
     }
 }

@@ -15,8 +15,9 @@ namespace shopdecor_api.Repositories.OrderRepositories
             _db = db;
         }
 
-        public async Task<DonHang> CreateOrderAsync(CreateOrderDTO orderDto)
+        public async Task<DonHang> CreateOrderAsync(CreateOrderDTO orderDto, ApplicationUser applicationUser)
         {
+
             var donHang = new DonHang
             {
                 HoTen = orderDto.HoTen,
@@ -27,6 +28,7 @@ namespace shopdecor_api.Repositories.OrderRepositories
                 TTDonHang = 0,
                 TTThanhToan = orderDto.TTThanhToan,
                 ThanhTien = orderDto.ThanhTien,
+                ApplicationUser = applicationUser,
             };
             await _db.DonHang.AddAsync(donHang);
             foreach (var x in orderDto.OrderDetails)
