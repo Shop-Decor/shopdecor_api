@@ -17,6 +17,7 @@ using shopdecor_api.Repositories.OrderRepositories;
 using shopdecor_api.Repositories.Product_CategoryRepositories;
 using shopdecor_api.Repositories.ProductDetailsRepositories;
 using shopdecor_api.Repositories.ProductRepositories;
+using shopdecor_api.Repositories.StatisticalRepositories;
 using shopdecor_api.Services;
 using System.Text;
 
@@ -80,6 +81,7 @@ builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IProductDetailsRepositories, ProductDetailsRepositories>();
 builder.Services.AddScoped<IProduct_CategoryRepository, Product_CategoryRepository>();
+builder.Services.AddScoped<StatisticalRepository>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 

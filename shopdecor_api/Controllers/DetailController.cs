@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
+using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Repositories.ProductDetailsRepositories;
 
 namespace shopdecor_api.Controllers
@@ -63,7 +64,7 @@ namespace shopdecor_api.Controllers
 
         // POST api/productdetails
         [HttpPost]
-        public async Task<ActionResult> Add([FromBody] IndexDTODetails dto)
+        public async Task<ActionResult> Add([FromBody] DTOCreateProductDetails dto)
         {
             try
             {
@@ -74,7 +75,11 @@ namespace shopdecor_api.Controllers
 
                 var productDetail = _mapper.Map<SanPham_ChiTiet>(dto);
                 await _repository.AddAsync(productDetail);
-                return CreatedAtAction(nameof(GetById), new { id = productDetail.Id }, productDetail);
+
+                productDetail = await _repository.GetByIdAsync(productDetail.Id);
+                var result = _mapper.Map<DTODetails>(productDetail);
+
+                return CreatedAtAction(nameof(GetById), new { id = productDetail.Id }, result);
             }
             catch (Exception ex)
             {
@@ -83,9 +88,10 @@ namespace shopdecor_api.Controllers
             }
         }
 
+
         // PUT api/productdetails/{id}
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, [FromBody] IndexDTODetails dto)
+        [HttpPut]
+        public async Task<ActionResult> Update([FromBody] DTOUpdateProductDetails dto)
         {
             try
             {
@@ -94,29 +100,27 @@ namespace shopdecor_api.Controllers
                     return BadRequest("DTO is null");
                 }
 
-                if (id != dto.Id)
-                {
-                    return BadRequest("ID mismatch");
-                }
-
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
-                var existingProductDetail = await _repository.GetByIdAsync(id);
+                var existingProductDetail = await _repository.GetByIdAsync(dto.Id);
                 if (existingProductDetail == null)
                 {
                     return NotFound();
                 }
 
-                var updatedProductDetail = _mapper.Map(dto, existingProductDetail);
-                await _repository.UpdateAsync(updatedProductDetail);
-                return Ok(updatedProductDetail);
+                _mapper.Map(dto, existingProductDetail);
+                await _repository.UpdateAsync(existingProductDetail);
+
+                var result = _mapper.Map<DTODetails>(existingProductDetail);
+
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error occurred while updating product detail with id {id}.");
+                _logger.LogError(ex, $"Error occurred while updating product detail with id {dto.Id}.");
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

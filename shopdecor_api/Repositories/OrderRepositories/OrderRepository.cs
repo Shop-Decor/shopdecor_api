@@ -85,7 +85,30 @@ namespace shopdecor_api.Repositories.OrderRepositories
             await _db.SaveChangesAsync();
             return exiInt;
         }
-        public async Task<DonHang?> GetOtherByIdAccountAndIdOrderAsync(ApplicationUser account, DonHang donHang)
+		public async Task<DonHang?> Updateorderss(int id, byte status, bool statuspay)
+		{
+
+			var exiInt = await _db.DonHang.FirstOrDefaultAsync(s => s.Id == id);
+
+
+
+			if (exiInt != null)
+			{
+				exiInt.TTThanhToan = statuspay;
+				exiInt.TTDonHang = status;
+				exiInt.NgayHuy = DateTime.Now;
+			}
+			else
+			{
+				return null;
+			}
+
+			await _db.SaveChangesAsync();
+			return exiInt;
+
+
+		}
+		public async Task<DonHang?> GetOtherByIdAccountAndIdOrderAsync(ApplicationUser account, DonHang donHang)
         {
             return await _db.DonHang.FirstOrDefaultAsync(x => x.ApplicationUser == account && x.Id == donHang.Id);
 

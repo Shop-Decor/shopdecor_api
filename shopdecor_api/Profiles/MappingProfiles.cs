@@ -10,6 +10,7 @@ using shopdecor_api.Models.DTO.OrderDetailDTO;
 using shopdecor_api.Models.DTO.OrderDTO;
 using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Models.DTO.SizeDTO;
+using shopdecor_api.Models.DTO.StatisticalDTO;
 
 namespace shopdecor_api.Profiles
 {
@@ -44,18 +45,23 @@ namespace shopdecor_api.Profiles
             CreateMap<SanPham, UpdateProductRequest>().ReverseMap();
 
             CreateMap<SanPham_ChiTiet, IndexDTODetails>()
-                .ForMember(dest => dest.IdMauSac, opt => opt.MapFrom(src => src.MauSac.TenMauSac))
-                .ForMember(dest => dest.IdKichThuoc, opt => opt.MapFrom(src => src.KichThuoc.TenKichThuoc))
-                .ReverseMap()
-                .ForMember(dest => dest.MauSac, opt => opt.Ignore())
-                .ForMember(dest => dest.KichThuoc, opt => opt.Ignore());
+              .ForMember(dest => dest.MauSacId, opt => opt.MapFrom(src => src.MauSacId))
+              .ForMember(dest => dest.KichThuocId, opt => opt.MapFrom(src => src.KichThuocId))
+              .ReverseMap()
+              .ForMember(dest => dest.MauSac, opt => opt.Ignore())
+              .ForMember(dest => dest.KichThuoc, opt => opt.Ignore());
 
             CreateMap<SanPham_ChiTiet, DTODetails>()
+                .ForMember(dest => dest.ColorId, opt => opt.MapFrom(src => src.MauSac.Id))
                 .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.MauSac.TenMauSac))
+                .ForMember(dest => dest.SizeId, opt => opt.MapFrom(src => src.KichThuoc.Id))
                 .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.KichThuoc.TenKichThuoc))
                 .ReverseMap()
                 .ForMember(dest => dest.MauSac, opt => opt.Ignore())
                 .ForMember(dest => dest.KichThuoc, opt => opt.Ignore());
+
+            CreateMap<SanPham_ChiTiet, DTOCreateProductDetails>().ReverseMap();
+            CreateMap<SanPham_ChiTiet, DTOUpdateProductDetails>().ReverseMap();
 
             CreateMap<SanPham, UpdateProductRequest>().ReverseMap();
 
@@ -93,6 +99,11 @@ namespace shopdecor_api.Profiles
             CreateMap<LoaiSP, GetCategoriesOnUser>().ReverseMap();
 
             CreateMap<PagedResult<SanPham>, GetUserProductPaginationDTO>().ReverseMap();
+
+            CreateMap<StatisticalDTO, StatisticalDTO>().ReverseMap();
+            CreateMap<IEnumerable<DonHang>, StatisticalDTO>()
+               .ForMember(dest => dest.SoDonHang, opt => opt.MapFrom(src => src.Count()))
+               .ForMember(dest => dest.TongDoanhThu, opt => opt.MapFrom(src => src.Sum(dh => dh.ThanhTien)));
 
         }
     }

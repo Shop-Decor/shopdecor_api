@@ -9,6 +9,9 @@ using shopdecor_api.Repositories.DiscountRepositories;
 using shopdecor_api.Repositories.ImageRepositories;
 using shopdecor_api.Repositories.Product_CategoryRepositories;
 using shopdecor_api.Repositories.ProductRepositories;
+using shopdecor_api.Models.DTO.FilterDTO;
+using shopdecor_api.Models.DTO.PagingDTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace shopdecor_api.Controllers
 {
@@ -31,13 +34,56 @@ namespace shopdecor_api.Controllers
             _imageRepository = imageRepository;
             _product_CategoryRepository = product_CategoryRepository;
         }
+
         [HttpGet]
-        public async Task<IActionResult> GetAllProducts()
+        public async Task<IActionResult> GetListProducts([FromQuery] PagingDTO paging, [FromQuery] SearchDTO search)
         {
-            var product = await _productRepository.GetAllAsync();
-            var map = _mapper.Map<List<IndexProductRequest>>(product);
-            return Ok(map);
+            var queryable = _productRepository.GetQueryable();
+            var totalRecord = queryable.Count();
+
+            // default paging
+            paging = paging ?? new PagingDTO();
+            paging.index = paging.index < 1 ? 1 : paging.index;
+            paging.size = paging.size < 1 ? 16 : paging.size;
+
+            // take products by search keyword
+            if (!string.IsNullOrEmpty(search?.keyword))
+            {
+                queryable = queryable.Where(prod => prod.Ten.Contains(search.keyword));
+            }
+
+            // take products by paging
+            queryable = queryable.Skip((paging.index - 1) * paging.size).Take(paging.size);
+
+            // order by newest product
+            queryable = queryable.OrderByDescending(prod => prod.NgayTao);
+
+            // get results & mapping
+            var products = await queryable.ToListAsync();
+            var productsRes = _mapper.Map<List<IndexProductRequest>>(products);
+
+
+
+            return Ok(new PagingResponseDTO<IndexProductRequest>()
+            {
+                list = productsRes,
+                paging = new()
+                {
+                    index = paging.index,
+                    size = paging.size,
+                    totalPage = (int)Math.Ceiling((decimal)totalRecord / paging.size),
+                }
+            });
         }
+
+        //[HttpGet("Moi")]
+        //public async Task<IActionResult> GetAllProducts()
+        //{
+        //    var product = await _productRepository.GetAllAsync();
+        //    var map = _mapper.Map<List<IndexProductRequest>>(product);
+        //    return Ok(map);
+        //}
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductsbyId(int id)
         {
@@ -59,7 +105,7 @@ namespace shopdecor_api.Controllers
                         await _imageRepository.AddImageByProductAsync(item, addedProduct);
                     }
                 }
-                return NoContent();
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -115,7 +161,7 @@ namespace shopdecor_api.Controllers
             var delProduct = await _productRepository.DeleteProductsAsync(id);
             if (delProduct != null)
                 delProduct.TrangThai = false;
-            return NoContent();
+            return Ok();
         }
 
         //[HttpGet("User/category")]
