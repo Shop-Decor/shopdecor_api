@@ -12,6 +12,7 @@ namespace shopdecor_api.Models.Domain
         public int ThanhTien { get; set; }
         // 0. Chờ xách nhận / 1. Đang giao / 2. Đã giao / 3.Đã Hủy
         public byte TTDonHang { get; set; }
+        public bool PTThanhToan { get; set; }
         public bool TTThanhToan { get; set; }
         public string? HoTen { get; set; }
         public string? DiaChi { get; set; }

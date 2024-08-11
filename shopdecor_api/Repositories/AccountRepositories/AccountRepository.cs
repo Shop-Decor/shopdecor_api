@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using shopdecor_api.Helper;
 using shopdecor_api.Models.Domain;
@@ -49,14 +50,15 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 string message = "1003";
                 return message;
             }
+            //get role 
+           
 
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.Name, user.UserName),
             };
             //check role
 
@@ -64,7 +66,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
             var userID = user.Id;
             authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-            //lấy giá trị roll = user hoặc role = admin
+            //lấy giá trị rool = user hoặc role = admin
             var role = (userRoles.Select(role => new Claim(ClaimTypes.Name, role))).First().Value;
 
 
@@ -73,7 +75,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
             var authKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
             var token = new JwtSecurityToken(
                 issuer: configuration["JWT:ValidIssuer"],
-                audience: role,
+                audience: configuration["JWT:ValidAudience"],
                 expires: DateTime.Now.AddDays(7),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authKey, SecurityAlgorithms.HmacSha512)
@@ -91,6 +93,17 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 Email = model.Email,
 
             };
+
+            var checkMail = await userManager.FindByEmailAsync(model.Email);
+            if (checkMail != null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "2002" });
+            }
+            var checkUser = await userManager.FindByNameAsync(model.UserName);
+            if (checkUser != null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "2001" });
+            }
             var result = await userManager.CreateAsync(user, model.Password);
 
             //kiểm tra 
@@ -106,6 +119,13 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 // dã có thì add role cho tk 
                 await userManager.AddToRoleAsync(user, AppRole.User);
             }
+            else
+            {
+                
+            }
+           
+            //check mail
+           
             return result;
         }
 
@@ -117,6 +137,8 @@ namespace shopdecor_api.Repositories.AccountRepositories
 
             try
             {
+                // Ghi log token để kiểm tra định dạng
+                Console.WriteLine($"Token received: {token}");
                 var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -134,9 +156,15 @@ namespace shopdecor_api.Repositories.AccountRepositories
                     return await userManager.FindByIdAsync(userId);
                 }
             }
-            catch
+            catch(SecurityTokenMalformedException ex)
             {
+                Console.WriteLine($"Token malformed: {ex.Message}");
                 // Optionally, log the exception or handle it as needed
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Ghi log lỗi hoặc xử lý nếu cần
             }
 
             return null;
@@ -160,9 +188,12 @@ namespace shopdecor_api.Repositories.AccountRepositories
 
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
         {
-            // Lấy tất cả người dùng từ UserManager
-            var users = userManager.Users.ToList().Where(x => x.Status == true);
-            return await Task.FromResult(users);
+            // Lấy tất cả người dùng từ UserManager và role admin
+
+            //var users = userManager.Users.ToList().Where(x => x.Status == true);
+            // lấy tất cả user theo role admin 
+            var admin = await userManager.GetUsersInRoleAsync(AppRole.Admin); 
+            return await Task.FromResult(admin);
         }
 
 
@@ -177,6 +208,16 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 Address = account.Address,
                 PhoneNumber = account.PhoneNumber,
             };
+            var checkMail = await userManager.FindByEmailAsync(account.Email);
+            if (checkMail != null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "2002" });
+            }
+            var checkUser = await userManager.FindByNameAsync(account.UserName);
+            if (checkUser != null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "2001" });
+            }
             var result = await userManager.CreateAsync(user, account.Password);
 
             //kiểm tra 
@@ -201,15 +242,25 @@ namespace shopdecor_api.Repositories.AccountRepositories
 
             var user = await userManager.FindByIdAsync(Id);
 
+
             if (user == null)
             {
                 return IdentityResult.Failed(new IdentityError { Description = "User not found." });
             }
-            //check giá trị có phù hợp như trong model không
-            if (!Regex.IsMatch(account.FullName, "^[a-zA-Z ]+$"))
+            //kiểm tra nếu giá trị email thay đổi và đã tồn tại trong db
+            var checkMail = await userManager.FindByEmailAsync(account.Email);
+            if (checkMail != null && user.Email != account.Email)
             {
-                return IdentityResult.Failed(new IdentityError { Description = "Tên Người Dùng chỉ chứa kí tự chữ" });
+                return IdentityResult.Failed(new IdentityError { Description = "2002" });
             }
+            var checkPhone = await userManager.Users
+                .FirstOrDefaultAsync(u => u.PhoneNumber == account.PhoneNumber);
+            if (checkPhone != null && user.PhoneNumber != account.PhoneNumber)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "2003" });
+            }
+            //check giá trị có phù hợp như trong model không
+            
             if (!Regex.IsMatch(account.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))
             {
                 return IdentityResult.Failed(new IdentityError { Description = "Email không hợp lệ" });
@@ -241,6 +292,22 @@ namespace shopdecor_api.Repositories.AccountRepositories
         {
             return await userManager.FindByIdAsync(accountId);
         }
+
+        public async Task<IdentityResult> ChangePassword(string id,ChangePasswordModel model)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+            }
+           
+            //check giá trị có phù hợp như trong model không
+            var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+            return result;
+        }
+
+
     }
 
 
