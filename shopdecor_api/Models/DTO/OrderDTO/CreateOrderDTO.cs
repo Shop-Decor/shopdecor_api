@@ -8,6 +8,7 @@
         public string? Email { get; set; }
         public bool TTThanhToan { get; set; }
         public int ThanhTien { get; set; }
+        public string userId { get; set; }
         public List<OrderDetailsDTO>? OrderDetails { get; set; }
     }
 }

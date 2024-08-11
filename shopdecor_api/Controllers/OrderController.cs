@@ -42,17 +42,25 @@ namespace shopdecor_api.Controllers
         }
 
         [HttpPost("CreateOrders")]
-        public async Task<IActionResult> CreateOrder(CreateOrderDTO orderDto)
+        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO orderDto)
         {
-            var result = await _orderRipository.CreateOrderAsync(orderDto);
-            if(result == null)
+            var userId = await _accountRepository.GetAccountById(orderDto.userId);
+            if(userId != null)
             {
-                return BadRequest();
+                var result = await _orderRipository.CreateOrderAsync(orderDto, userId);
+
+                if (result == null)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    return Ok(result.Id);
+                }
             }
-            else
-            {
-                return Ok(result.Id);
-            }
+            return BadRequest(userId);
+            
+
         }
 
 
