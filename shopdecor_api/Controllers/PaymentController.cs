@@ -88,7 +88,9 @@ namespace shopdecor_api.Controllers
                     var dh = await _db.DonHang.FirstOrDefaultAsync(x => x.Id.ToString() == id);
                     if (dh != null)
                     {
-                        dh.TTDonHang = 1; // Cập nhật trạng thái đơn hàng thành công
+                        dh.TTDonHang = 1;
+                        dh.PTThanhToan = true;
+                        // Cập nhật trạng thái đơn hàng thành công
                         await _db.SaveChangesAsync();
                     }
                     return Redirect($"http://localhost:3000/?paymentStatus=success");

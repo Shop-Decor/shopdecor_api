@@ -49,6 +49,11 @@ namespace shopdecor_api.Repositories.DiscountRepositories
             return await _context.KhuyenMai.Where(x => x.MaGiamGia == maGiamGia).FirstOrDefaultAsync();
         }
 
+        public IQueryable<KhuyenMai> GetQueryable()
+        {
+            return _context.KhuyenMai.AsQueryable();
+        }
+
         public async Task<KhuyenMai?> UpdateAsync(KhuyenMai khuyenMai, string maGiamGia)
         {
             var discountExist =  await _context.KhuyenMai.FirstOrDefaultAsync(x => x.MaGiamGia == maGiamGia);

@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Helper;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
+using shopdecor_api.Models.DTO.FilterDTO;
+using shopdecor_api.Models.DTO.PagingDTO;
 using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Repositories.DiscountRepositories;
 using shopdecor_api.Repositories.ImageRepositories;
 using shopdecor_api.Repositories.Product_CategoryRepositories;
 using shopdecor_api.Repositories.ProductRepositories;
-using shopdecor_api.Models.DTO.FilterDTO;
-using shopdecor_api.Models.DTO.PagingDTO;
-using Microsoft.EntityFrameworkCore;
 
 namespace shopdecor_api.Controllers
 {
@@ -208,6 +208,13 @@ namespace shopdecor_api.Controllers
             paginationParams.PageSize = 12;
             var products = await _productRepository.GetPagedProductsAsync(LoaiId, paginationParams.PageNumber, paginationParams.PageSize);
             var map = _mapper.Map<GetUserProductPaginationDTO>(products);
+            return Ok(map);
+        }
+        [HttpGet("User")]
+        public async Task<IActionResult> GetAllUserProducts()
+        {
+            var product = await _productRepository.GetAllProductUsers();
+            var map = _mapper.Map<List<GetUserProduct>>(product);
             return Ok(map);
         }
 

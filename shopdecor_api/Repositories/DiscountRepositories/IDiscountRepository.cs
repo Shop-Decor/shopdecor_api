@@ -11,5 +11,6 @@ namespace shopdecor_api.Repositories.DiscountRepositories
         Task<KhuyenMai?> UpdateAsync(KhuyenMai khuyenMai, string maGiamGia);
         Task<KhuyenMai> DeleteAsync (string maGiamGia);
         Task<bool> DiscountExist(string maGiamGia);
+        IQueryable<KhuyenMai> GetQueryable();
     }
 }
