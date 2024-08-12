@@ -99,6 +99,7 @@ namespace shopdecor_api.Profiles
             CreateMap<LoaiSP, GetCategoriesOnUser>().ReverseMap();
 
             CreateMap<PagedResult<SanPham>, GetUserProductPaginationDTO>().ReverseMap();
+
             CreateMap<StatisticalDTO, StatisticalDTO>().ReverseMap();
             CreateMap<IEnumerable<DonHang>, StatisticalDTO>()
                .ForMember(dest => dest.SoDonHang, opt => opt.MapFrom(src => src.Count()))

@@ -75,13 +75,6 @@ namespace shopdecor_api.Controllers
                 }
             });
         }
-        //[HttpGet]
-        //public async Task<IActionResult> GetAllProducts()
-        //{
-        //    var product = await _productRepository.GetAllAsync();
-        //    var map = _mapper.Map<List<IndexProductRequest>>(product);
-        //    return Ok(map);
-        //}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductsbyId(int id)
         {
