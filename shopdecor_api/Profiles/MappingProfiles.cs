@@ -104,6 +104,11 @@ namespace shopdecor_api.Profiles
                .ForMember(dest => dest.SoDonHang, opt => opt.MapFrom(src => src.Count()))
                .ForMember(dest => dest.TongDoanhThu, opt => opt.MapFrom(src => src.Sum(dh => dh.ThanhTien)));
 
+            CreateMap<SanPham, GetProductAutoSearchDTO>()
+                .ForMember(dest => dest.Hinh, opt => opt.MapFrom(src => src.Hinhs.FirstOrDefault().Link))
+                .ForMember(dest => dest.Gia, opt => opt.MapFrom(src => src.SanPham_ChiTiets.Any() ? src.SanPham_ChiTiets.Min(s => s.Gia) : 0))
+                .ReverseMap();
+            CreateMap<KhuyenMai, SubDiscountAutoSearch>().ReverseMap();
         }
     }
 }

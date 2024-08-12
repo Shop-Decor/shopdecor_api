@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace shopdecor_api.Models.DTO.AccountDTO
+﻿namespace shopdecor_api.Models.DTO.AccountDTO
 {
     public class EditAccount
     {
@@ -8,5 +6,6 @@ namespace shopdecor_api.Models.DTO.AccountDTO
         public string Email { get; set; } = null!;
         public string? PhoneNumber { get; set; } = null!;
         public string? Address { get; set; } = null!;
+        public string? Link { get; set; }
     }
 }

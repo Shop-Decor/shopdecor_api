@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Helper;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
+using shopdecor_api.Models.DTO.FilterDTO;
+using shopdecor_api.Models.DTO.PagingDTO;
 using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Repositories.DiscountRepositories;
 using shopdecor_api.Repositories.ImageRepositories;
 using shopdecor_api.Repositories.Product_CategoryRepositories;
 using shopdecor_api.Repositories.ProductRepositories;
-using shopdecor_api.Models.DTO.FilterDTO;
-using shopdecor_api.Models.DTO.PagingDTO;
-using Microsoft.EntityFrameworkCore;
 
 namespace shopdecor_api.Controllers
 {
@@ -75,13 +75,13 @@ namespace shopdecor_api.Controllers
                 }
             });
         }
-        [HttpGet]
-        public async Task<IActionResult> GetAllProducts()
-        {
-            var product = await _productRepository.GetAllAsync();
-            var map = _mapper.Map<List<IndexProductRequest>>(product);
-            return Ok(map);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetAllProducts()
+        //{
+        //    var product = await _productRepository.GetAllAsync();
+        //    var map = _mapper.Map<List<IndexProductRequest>>(product);
+        //    return Ok(map);
+        //}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductsbyId(int id)
         {
@@ -162,14 +162,6 @@ namespace shopdecor_api.Controllers
             return Ok();
         }
 
-        //[HttpGet("User/category")]
-        //public async Task<IActionResult> GetAllUserProducts([FromQuery] int? LoaiId)
-        //{
-        //    var products = (LoaiId == null) ? await _productRepository.GetAllProductUsers() : await _productRepository.GetProductsByTypeId((int)LoaiId);
-        //    var map = _mapper.Map<List<GetUserProduct>>(products);
-        //    return Ok(map);
-        //}
-
         [HttpGet("getproductdetail")]
         public async Task<IActionResult> getproductdetailbyproduct(int spId)
         {
@@ -209,6 +201,27 @@ namespace shopdecor_api.Controllers
             return Ok(map);
         }
 
+        [HttpGet("autosearch")]
+        public async Task<IActionResult> GetProductByName([FromQuery] string? key)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                return Ok(new List<object>());
+            }
+            var products = await _productRepository.GetProductByNameAsync(key);
+            var map = _mapper.Map<List<GetProductAutoSearchDTO>>(products);
+            return Ok(map);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchByName([FromQuery] string? key, [FromQuery] PaginationParams paginationParams)
+        {
+            paginationParams.PageNumber = paginationParams.PageNumber < 1 ? 1 : paginationParams.PageNumber;
+            paginationParams.PageSize = 15;
+            var products = await _productRepository.GetPagedSearchAsync(key, paginationParams.PageNumber, paginationParams.PageSize);
+            var map = _mapper.Map<GetUserProductPaginationDTO>(products);
+            return Ok(map);
+        }
     }
 }
 

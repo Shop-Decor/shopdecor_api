@@ -15,11 +15,14 @@ namespace shopdecor_api.Repositories.ProductRepositories
         Task AddImageAsync(Hinh hinh);
         Task<List<ProductDetail>> GetProductDetail(int SpId);
         Task<IEnumerable<SanPham>> GetProductsByTypeId(int typeId);
-        public Task<SanPham> AddProductDetailAsync(ProductWithDetailsDTO productWithDetails);
+        Task<SanPham> AddProductDetailAsync(ProductWithDetailsDTO productWithDetails);
 
         Task<IEnumerable<SanPham>> GetAllProductUsers();
 
-        Task<PagedResult<SanPham>> GetPagedProductsAsync(int? typeId, int page, int pageSize);
+        Task<PagedResult<SanPham>?> GetPagedProductsAsync(int? typeId, int page, int pageSize);
+        Task<IEnumerable<SanPham>?> GetProductByNameAsync(string key);
+        Task<PagedResult<SanPham>?> GetPagedSearchAsync(string? key, int page, int pageSize);
+
         IQueryable<SanPham> GetQueryable();
 
     }
