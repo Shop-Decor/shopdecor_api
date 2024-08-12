@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO.DiscountDTO;
+using shopdecor_api.Models.DTO.FilterDTO;
+using shopdecor_api.Models.DTO.PagingDTO;
 using shopdecor_api.Repositories.DiscountRepositories;
 
 namespace shopdecor_api.Controllers
@@ -20,14 +23,40 @@ namespace shopdecor_api.Controllers
 
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllDiscountAsync()
+        public async Task<IActionResult> GetAllDiscountAsync([FromQuery] PagingDTO paging, [FromQuery] SearchDTO search)
         {
+            var queryable = _discountRepository.GetQueryable();
+            var totalRecord = queryable.Count();
+            paging = paging ?? new PagingDTO();
+            paging.index = paging.index < 1 ? 1 : paging.index;
+            paging.size = paging.size < 1 ? 16 : paging.size;
 
-            var Discount = await _discountRepository.GetAllAsync();
+            if (!string.IsNullOrEmpty(search?.keyword))
+            {
+                queryable = queryable.Where(prod => prod.MoTa.Contains(search.keyword));
+            }
+
+            queryable = queryable.Skip((paging.index - 1) * paging.size).Take(paging.size);
+
+            // order by newest product
+            queryable = queryable.OrderByDescending(prod => prod.NgayTao);
+
+            var Discount = await queryable.ToListAsync();
             var Map = _mapper.Map<List<IndexDiscountDTO>>(Discount);
 
-            return Ok(Map);
+
+            return Ok(new PagingResponseDTO<IndexDiscountDTO>()
+            {
+                list = Map,
+                paging = new()
+                {
+                    index = paging.index,
+                    size = paging.size,
+                    totalPage = (int)Math.Ceiling((decimal)totalRecord / paging.size),
+                }
+            });
         }
+
         [HttpGet("{maGiamGia}")]
         public async Task<IActionResult> GetAsync(string maGiamGia)
         {

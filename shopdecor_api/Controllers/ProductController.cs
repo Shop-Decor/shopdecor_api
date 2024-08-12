@@ -193,6 +193,13 @@ namespace shopdecor_api.Controllers
             var map = _mapper.Map<GetUserProductPaginationDTO>(products);
             return Ok(map);
         }
+        [HttpGet("User")]
+        public async Task<IActionResult> GetAllUserProducts()
+        {
+            var product = await _productRepository.GetAllProductUsers();
+            var map = _mapper.Map<List<GetUserProduct>>(product);
+            return Ok(map);
+        }
 
         [HttpGet("autosearch")]
         public async Task<IActionResult> GetProductByName([FromQuery] string? key)
