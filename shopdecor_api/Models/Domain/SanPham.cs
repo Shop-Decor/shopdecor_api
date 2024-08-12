@@ -7,6 +7,8 @@ namespace shopdecor_api.Models.Domain
         public int Id { get; set; }
         [Column(TypeName = "Nvarchar(200)")]
         public string? Ten { get; set; }
+        [Column(TypeName = "Varchar(200)")]
+        public string? TenKhongTiengViet { get; set; }
         [Column(TypeName = "Nvarchar(max)")]
         public string? MoTa { get; set; }
         public DateTime NgayTao { get; set; }

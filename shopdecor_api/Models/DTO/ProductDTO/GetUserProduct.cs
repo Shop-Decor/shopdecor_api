@@ -15,7 +15,5 @@
         public int MenhGia { get; set; }
         public string? Size { get; set; }
         public int SoLuong { get; set; }
-        
-
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace shopdecor_api.Migrations
 {
     /// <inheritdoc />
-    public partial class updatabase : Migration
+    public partial class db : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -259,6 +259,7 @@ namespace shopdecor_api.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ten = table.Column<string>(type: "Nvarchar(200)", nullable: true),
+                    TenKhongTiengViet = table.Column<string>(type: "Varchar(200)", nullable: true),
                     MoTa = table.Column<string>(type: "Nvarchar(max)", nullable: true),
                     NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TrangThai = table.Column<bool>(type: "bit", nullable: false),
@@ -348,9 +349,9 @@ namespace shopdecor_api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Gia = table.Column<int>(type: "int", nullable: false),
                     SoLuong = table.Column<int>(type: "int", nullable: false),
-                    KichThuocId = table.Column<int>(type: "int", nullable: true),
-                    MauSacId = table.Column<int>(type: "int", nullable: true),
-                    SanPhamId = table.Column<int>(type: "int", nullable: true)
+                    KichThuocId = table.Column<int>(type: "int", nullable: false),
+                    MauSacId = table.Column<int>(type: "int", nullable: false),
+                    SanPhamId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -359,17 +360,20 @@ namespace shopdecor_api.Migrations
                         name: "FK_SanPham_ChiTiet_KichThuoc_KichThuocId",
                         column: x => x.KichThuocId,
                         principalTable: "KichThuoc",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SanPham_ChiTiet_MauSac_MauSacId",
                         column: x => x.MauSacId,
                         principalTable: "MauSac",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SanPham_ChiTiet_SanPham_SanPhamId",
                         column: x => x.SanPhamId,
                         principalTable: "SanPham",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

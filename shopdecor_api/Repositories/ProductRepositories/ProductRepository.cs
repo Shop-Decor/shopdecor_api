@@ -153,7 +153,7 @@ namespace shopdecor_api.Repositories.ProductRepositories
             return await _db.SanPham.Where(x => x.TrangThai == true).ToListAsync();
         }
 
-        public async Task<PagedResult<SanPham>> GetPagedProductsAsync(int? typeId, int page, int pageSize)
+        public async Task<PagedResult<SanPham>?> GetPagedProductsAsync(int? typeId, int page, int pageSize)
         {
             if (typeId == null)
             {
@@ -166,6 +166,22 @@ namespace shopdecor_api.Repositories.ProductRepositories
         public IQueryable<SanPham> GetQueryable()
         {
             return _db.SanPham.AsQueryable();
+        }
+
+        public async Task<IEnumerable<SanPham>?> GetProductByNameAsync(string key)
+        {
+            string keyNoDiacritics = VietnameseHelper.RemoveVietnameseDiacritics(key.ToLower());
+            return await _db.SanPham.Where(x => x.TenKhongTiengViet.ToLower().Contains(keyNoDiacritics) && x.TrangThai == true).ToListAsync();
+        }
+
+        public async Task<PagedResult<SanPham>?> GetPagedSearchAsync(string? key, int page, int pageSize)
+        {
+            if (key == null)
+            {
+                return await _db.SanPham.Where(x => x.TrangThai == true).GetPagedAsync(page, pageSize);
+            }
+            string keyNoDiacritics = VietnameseHelper.RemoveVietnameseDiacritics(key.ToLower());
+            return await _db.SanPham.Where(x => x.TenKhongTiengViet.ToLower().Contains(keyNoDiacritics) && x.TrangThai == true).GetPagedAsync(page, pageSize);
         }
     }
 }

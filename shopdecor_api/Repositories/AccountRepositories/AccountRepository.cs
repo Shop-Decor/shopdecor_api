@@ -51,7 +51,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 return message;
             }
             //get role 
-           
+
 
             var authClaims = new List<Claim>
             {
@@ -60,6 +60,12 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
             };
+
+            if (!string.IsNullOrEmpty(user.Link))
+            {
+                authClaims.Add(new Claim("Link", user.Link));
+            }
+
             //check role
 
             var userRoles = await userManager.GetRolesAsync(user);
@@ -121,11 +127,11 @@ namespace shopdecor_api.Repositories.AccountRepositories
             }
             else
             {
-                
+
             }
-           
+
             //check mail
-           
+
             return result;
         }
 
@@ -156,7 +162,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
                     return await userManager.FindByIdAsync(userId);
                 }
             }
-            catch(SecurityTokenMalformedException ex)
+            catch (SecurityTokenMalformedException ex)
             {
                 Console.WriteLine($"Token malformed: {ex.Message}");
                 // Optionally, log the exception or handle it as needed
@@ -192,7 +198,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
 
             //var users = userManager.Users.ToList().Where(x => x.Status == true);
             // lấy tất cả user theo role admin 
-            var admin = await userManager.GetUsersInRoleAsync(AppRole.Admin); 
+            var admin = await userManager.GetUsersInRoleAsync(AppRole.Admin);
             return await Task.FromResult(admin);
         }
 
@@ -207,6 +213,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 UserName = account.UserName,
                 Address = account.Address,
                 PhoneNumber = account.PhoneNumber,
+                Link = account.Link,
             };
             var checkMail = await userManager.FindByEmailAsync(account.Email);
             if (checkMail != null)
@@ -238,10 +245,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
 
         public async Task<IdentityResult> UpdateUser(EditAccount account, string Id)
         {
-
-
             var user = await userManager.FindByIdAsync(Id);
-
 
             if (user == null)
             {
@@ -260,7 +264,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
                 return IdentityResult.Failed(new IdentityError { Description = "2003" });
             }
             //check giá trị có phù hợp như trong model không
-            
+
             if (!Regex.IsMatch(account.Email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$"))
             {
                 return IdentityResult.Failed(new IdentityError { Description = "Email không hợp lệ" });
@@ -270,7 +274,10 @@ namespace shopdecor_api.Repositories.AccountRepositories
             user.Email = account.Email;
             user.PhoneNumber = account.PhoneNumber;
             user.Address = account.Address;
-
+            if (account.Link != null)
+            {
+                user.Link = account.Link;
+            }
             var result = await userManager.UpdateAsync(user);
             return result;
         }
@@ -293,14 +300,14 @@ namespace shopdecor_api.Repositories.AccountRepositories
             return await userManager.FindByIdAsync(accountId);
         }
 
-        public async Task<IdentityResult> ChangePassword(string id,ChangePasswordModel model)
+        public async Task<IdentityResult> ChangePassword(string id, ChangePasswordModel model)
         {
             var user = await userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return IdentityResult.Failed(new IdentityError { Description = "User not found." });
             }
-           
+
             //check giá trị có phù hợp như trong model không
             var result = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
 

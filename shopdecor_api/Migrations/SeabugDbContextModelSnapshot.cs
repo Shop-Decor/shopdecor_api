@@ -515,6 +515,9 @@ namespace shopdecor_api.Migrations
                     b.Property<string>("Ten")
                         .HasColumnType("Nvarchar(200)");
 
+                    b.Property<string>("TenKhongTiengViet")
+                        .HasColumnType("Varchar(200)");
+
                     b.Property<bool>("TrangThai")
                         .HasColumnType("bit");
 
@@ -536,13 +539,13 @@ namespace shopdecor_api.Migrations
                     b.Property<int>("Gia")
                         .HasColumnType("int");
 
-                    b.Property<int?>("KichThuocId")
+                    b.Property<int>("KichThuocId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MauSacId")
+                    b.Property<int>("MauSacId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SanPhamId")
+                    b.Property<int>("SanPhamId")
                         .HasColumnType("int");
 
                     b.Property<int>("SoLuong")
@@ -694,15 +697,21 @@ namespace shopdecor_api.Migrations
                 {
                     b.HasOne("shopdecor_api.Models.Domain.KichThuoc", "KichThuoc")
                         .WithMany("SanPham_ChiTiets")
-                        .HasForeignKey("KichThuocId");
+                        .HasForeignKey("KichThuocId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("shopdecor_api.Models.Domain.MauSac", "MauSac")
                         .WithMany("SanPham_ChiTiets")
-                        .HasForeignKey("MauSacId");
+                        .HasForeignKey("MauSacId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("shopdecor_api.Models.Domain.SanPham", "SanPham")
                         .WithMany("SanPham_ChiTiets")
-                        .HasForeignKey("SanPhamId");
+                        .HasForeignKey("SanPhamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("KichThuoc");
 
