@@ -29,6 +29,20 @@ namespace shopdecor_api.Controllers
             _mapper = mapper;
             this.accountRepo = repo;
         }
+        //create fisrt account when run project
+        [HttpPost]
+        public async Task<IActionResult> CreateFirstAccount()
+        {
+            
+            var result = await accountRepo.CreateFirstAccount();
+            if (result.Succeeded)
+            {
+                return Ok(result.Succeeded);
+            }
+            return Ok(result.Errors.FirstOrDefault().Description);
+        }
+
+
         [HttpPost("SignUp")]
         public async Task<IActionResult> SignUp(SignUpModel signUpModel)
         {
@@ -157,7 +171,7 @@ namespace shopdecor_api.Controllers
                 return Ok(result.Succeeded);
             }
 
-            return Ok(new { Token = result });
+            return Ok(result.Errors.FirstOrDefault().Description);
         }
 
 
