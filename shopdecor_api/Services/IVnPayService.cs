@@ -1,11 +1,10 @@
-﻿using shopdecor_api.Data;
-using shopdecor_api.ViewModel;
+﻿using shopdecor_api.Repositories.VnpayDTO;
 
 namespace shopdecor_api.Services
 {
     public interface IVnPayService
     {
-        string CreatePaymentUrl (SeabugDbContext context, VnPaymentRequestModel model);
-        VnPaymentResponseModel PaymentExecute(IQueryCollection collections);
+        string CreatePaymentUrl(PaymentInformationModel model, HttpContext context);
+        PaymentResponseModel PaymentExecute(IQueryCollection collections);
     }
 }
