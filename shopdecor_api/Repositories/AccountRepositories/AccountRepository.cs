@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using shopdecor_api.Helper;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO.AccountDTO;
+using shopdecor_api.Models.DTO.FilterDTO;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -192,13 +193,17 @@ namespace shopdecor_api.Repositories.AccountRepositories
             };
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync(SearchDTO? search)
         {
             // Lấy tất cả người dùng từ UserManager và role admin
 
             //var users = userManager.Users.ToList().Where(x => x.Status == true);
             // lấy tất cả user theo role admin 
             var admin =( await userManager.GetUsersInRoleAsync(AppRole.Admin)).Where(x=> x.Status == true);
+            if(search.keyword!= "" && search.keyword != null)
+            {
+                admin = admin.Where(x => x.UserName.Contains(search.keyword) || x.Email.Contains(search.keyword));
+            }
            
             return await Task.FromResult(admin);
         }

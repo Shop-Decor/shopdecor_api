@@ -10,6 +10,7 @@ using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO.AccountDTO;
 using shopdecor_api.Models.DTO.FilterDTO;
 using shopdecor_api.Models.DTO.PagingDTO;
+using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Repositories.AccountRepositories;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -90,10 +91,10 @@ namespace shopdecor_api.Controllers
         [HttpGet("Get")]
         //check role 
         [Authorize(Roles="Admin")]
-        public async Task<IActionResult> Get([FromQuery] PagingDTO paging, [FromQuery] SearchDTO search)
+        public async Task<IActionResult> Get([FromQuery] PagingDTO paging, [FromQuery] SearchDTO? search)
         {
 
-            var usersList = await accountRepo.GetAllUsersAsync(); // Await the asynchronous method
+            var usersList = await accountRepo.GetAllUsersAsync(search); // Await the asynchronous method
             var queryable = usersList.AsQueryable(); // Convert the list to IQueryable
 
             var totalRecord = queryable.Count();
