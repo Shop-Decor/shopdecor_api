@@ -25,5 +25,6 @@ namespace shopdecor_api.Repositories.ProductRepositories
 
         IQueryable<SanPham> GetQueryable();
 
+
     }
 }

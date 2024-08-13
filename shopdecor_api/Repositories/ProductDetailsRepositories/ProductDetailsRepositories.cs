@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Data;
 using shopdecor_api.Models.Domain;
+using shopdecor_api.Models.DTO;
 using shopdecor_api.Repositories.ProductDetailsRepositories;
 
 public class ProductDetailsRepositories : IProductDetailsRepositories
@@ -83,6 +84,22 @@ public class ProductDetailsRepositories : IProductDetailsRepositories
     public async Task<List<SanPham_ChiTiet>> GetProductsDetailbyproduct(int SpId)
     {
         return await _context.SanPham_ChiTiet.Where(x => x.SanPham.Id == SpId).ToListAsync();
+    }
+    public async Task<IEnumerable<ProductDetailDTO>> GetAllProductDetailsAsync()
+    {
+        return await _context.SanPham_ChiTiet
+            .GroupBy(p => p.SanPhamId)
+            .Select(g => new ProductDetailDTO
+            {
+                ProductId = g.Key,
+                ChiTietSanPham = g.Select(p => new ProductDTODetail
+                {
+                    Color = p.MauSac.TenMauSac,
+                    Size = p.KichThuoc.TenKichThuoc,
+                    Quantity = p.SoLuong
+                }).ToList()
+            })
+            .ToListAsync();
     }
 
 }
