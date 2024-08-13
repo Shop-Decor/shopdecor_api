@@ -1,11 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO.AccountDTO;
+using shopdecor_api.Models.DTO.FilterDTO;
+using shopdecor_api.Models.DTO.PagingDTO;
+using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Repositories.AccountRepositories;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -18,8 +23,10 @@ namespace shopdecor_api.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountRepository accountRepo;
-        public AccountController(IAccountRepository repo)
+        private readonly IMapper _mapper;
+        public AccountController(IAccountRepository repo, IMapper mapper)
         {
+            _mapper = mapper;
             this.accountRepo = repo;
         }
         [HttpPost("SignUp")]
@@ -51,6 +58,7 @@ namespace shopdecor_api.Controllers
       
 
         [HttpPost("Create")]
+        [Authorize(Roles="Admin")]
         public async Task<IActionResult> Create([FromBody] CreateAccount account)
         {
             var result = await accountRepo.CreateUser(account);
@@ -61,7 +69,7 @@ namespace shopdecor_api.Controllers
                 return Ok(result.Succeeded);
             }
 
-            return Ok(new { Token = result });
+            return Ok(result.Errors.FirstOrDefault().Description);
         }
 
         [HttpPut("{Id}")]
@@ -83,20 +91,45 @@ namespace shopdecor_api.Controllers
         [HttpGet("Get")]
         //check role 
         [Authorize(Roles="Admin")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] PagingDTO paging, [FromQuery] SearchDTO? search)
         {
-            
-            // Fetch all users (assuming the user has the right permissions)
-            var users = await accountRepo.GetAllUsersAsync();
 
-            if (users == null || !users.Any())
+            var usersList = await accountRepo.GetAllUsersAsync(search); // Await the asynchronous method
+            var queryable = usersList.AsQueryable(); // Convert the list to IQueryable
+
+            var totalRecord = queryable.Count();
+            paging = paging ?? new PagingDTO();
+            paging.index = paging.index < 1 ? 1 : paging.index;
+            paging.size = paging.size < 1 ? 16 : paging.size;
+
+            if (!string.IsNullOrEmpty(search?.keyword))
             {
-                return NotFound("No users found.");
+                queryable = queryable.Where(user => user.UserName.Contains(search.keyword));
             }
 
-            return Ok(users);
+            totalRecord = queryable.Count(); // Recalculate total records after filtering
+
+            queryable = queryable
+                .OrderByDescending(user => user.DateCreated) // Order the users by DateCreated
+                .Skip((paging.index - 1) * paging.size) // Skip to the desired page
+                .Take(paging.size); // Take the page size number of users
+
+            var users = queryable.ToList(); // Execute the query and get the list of users
+            var usersRes = users; // Map the users to the desired DTO
+
+            return Ok(new PagingResponseDTO<ApplicationUser>()
+            {
+                list = usersRes,
+                paging = new()
+                {
+                    index = paging.index,
+                    size = paging.size,
+                    totalPage = (int)Math.Ceiling((decimal)totalRecord / paging.size),
+                }
+            });
         }
         [HttpGet("GetUser")]
+
         public async Task<IActionResult> GetUser()
         {
             string token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
@@ -113,6 +146,7 @@ namespace shopdecor_api.Controllers
             return Unauthorized();
         }
         [HttpPut("Delete/{Id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string Id)
         {
             var result = await accountRepo.DeleteUser( Id);
