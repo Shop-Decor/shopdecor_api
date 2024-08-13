@@ -21,15 +21,13 @@ namespace shopdecor_api.Controllers
             _accountRepository = accountRepository;
         }
 
-		[HttpGet]
-		public async Task<IActionResult> orderStatus(byte status)
-		{
-			/*	var orderstatus = await _orderRipository.GetAlloderbystatus(status);
-				var maporderDTO = _mapper.Map<List<OrderDTO>>(orderstatus);*/
-			var orderstatus = await _orderRipository.GetAlloderbystatus(status);
-			return Ok(orderstatus);
-		}
-    
+        [HttpGet]
+        public async Task<IActionResult> orderStatus(byte status)
+        {
+            var orderstatus = await _orderRipository.GetAlloderbystatus(status);
+            return Ok(orderstatus);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> updatestatus(int id, byte status, string? un)
         {
@@ -40,28 +38,23 @@ namespace shopdecor_api.Controllers
             }
             return Ok(test);
         }
-		[HttpPut]
-		public async Task<IActionResult> updatestatues(int id, byte status, bool statuspay)
-		{
-
-
-			var test = await _orderRipository.Updateorderss(id, status, statuspay);
-			if (test == null)
-			{
-				return BadRequest();
-			}
-
-			return Ok(test);
-
-
-		}
+        [HttpPut]
+        public async Task<IActionResult> updatestatues(int id, byte status, bool statuspay)
+        {
+            var test = await _orderRipository.Updateorderss(id, status, statuspay);
+            if (test == null)
+            {
+                return BadRequest();
+            }
+            return Ok(test);
+        }
 
 
         [HttpPost("CreateOrders")]
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO orderDto)
         {
             var userId = await _accountRepository.GetAccountById(orderDto.userId);
-            if(userId != null)
+            if (userId != null)
             {
                 var result = await _orderRipository.CreateOrderAsync(orderDto, userId);
 
@@ -75,11 +68,7 @@ namespace shopdecor_api.Controllers
                 }
             }
             return BadRequest(userId);
-            
-
         }
-
-
 
         [HttpGet("user")]
         public async Task<IActionResult> GetOrderByUser([FromQuery] string accountId, [FromQuery] byte? status)
