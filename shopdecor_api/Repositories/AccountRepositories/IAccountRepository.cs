@@ -16,6 +16,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
         public Task<IdentityResult> DeleteUser(string ID);
         public Task<ApplicationUser> GetAccountById(string accountId);
         public Task<IdentityResult> ChangePassword(string id, ChangePasswordModel model);
+        IQueryable<ApplicationUser> GetQueryable();
 
     }
 }

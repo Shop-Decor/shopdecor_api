@@ -198,7 +198,8 @@ namespace shopdecor_api.Repositories.AccountRepositories
 
             //var users = userManager.Users.ToList().Where(x => x.Status == true);
             // lấy tất cả user theo role admin 
-            var admin = await userManager.GetUsersInRoleAsync(AppRole.Admin);
+            var admin =( await userManager.GetUsersInRoleAsync(AppRole.Admin)).Where(x=> x.Status == true);
+           
             return await Task.FromResult(admin);
         }
 
@@ -314,7 +315,11 @@ namespace shopdecor_api.Repositories.AccountRepositories
             return result;
         }
 
-
+        public IQueryable<ApplicationUser> GetQueryable()
+        {
+            //var user= (await userManager.GetUsersInRoleAsync(AppRole.Admin)).Where(x => x.Status == true)
+            return userManager.Users;
+        }
     }
 
 
