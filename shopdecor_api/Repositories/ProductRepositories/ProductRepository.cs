@@ -184,5 +184,9 @@ namespace shopdecor_api.Repositories.ProductRepositories
             return await _db.SanPham.Where(x => x.TenKhongTiengViet.ToLower().Contains(keyNoDiacritics) && x.TrangThai == true).GetPagedAsync(page, pageSize);
         }
 
+        public async Task<IEnumerable<SanPham>?> GetFeaturedProductsAsync()
+        {
+            return await _db.SanPham.Where(x => x.TrangThai == true).OrderByDescending(x => x.DonHang_ChiTiets.Sum(x => x.SoLuong)).ToListAsync();
+        }
     }
 }

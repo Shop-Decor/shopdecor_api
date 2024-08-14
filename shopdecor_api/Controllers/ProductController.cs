@@ -226,7 +226,21 @@ namespace shopdecor_api.Controllers
             var map = _mapper.Map<GetUserProductPaginationDTO>(products);
             return Ok(map);
         }
-
+        [HttpGet("featured-products")]
+        public async Task<IActionResult> GetFeaturedProducts()
+        {
+            var products = await _productRepository.GetFeaturedProductsAsync();
+            if (products == null)
+            {
+                return BadRequest("Không có sản phẩm nào");
+            }
+            if (products.Count() > 10)
+            {
+                products = products.Take(10);
+            }
+            var productsDTO = _mapper.Map<List<GetUserProduct>>(products);
+            return Ok(productsDTO);
+        }
     }
 }
 
