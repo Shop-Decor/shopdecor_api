@@ -30,7 +30,7 @@ namespace shopdecor_api.Services
             var newuser = new ApplicationUser
             {
                 UserName = "admin",
-                FullName = "admin",
+                FullName = "Admin First",
                 Email = "admin@gmail.com",
                 Status = true,
             };
