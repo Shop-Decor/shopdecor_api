@@ -1,4 +1,6 @@
-﻿namespace shopdecor_api.Models.DTO.OrderDTO
+﻿using shopdecor_api.Models.Domain;
+
+namespace shopdecor_api.Models.DTO.OrderDTO
 {
 	public class OrderDTO
 	{
@@ -14,5 +16,7 @@
 		// 0. Chờ xách nhận / 1. Đang giao / 2. Đã giao / 3.Đã Hủy
 		public byte TTDonHang { get; set; }
 		public bool TTThanhToan { get; set; }
+		public bool PTThanhToan { get; set; }
+		public KhuyenMai khuyenMai { get; set; }
 	}
 }

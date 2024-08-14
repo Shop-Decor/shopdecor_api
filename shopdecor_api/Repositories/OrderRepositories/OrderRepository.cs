@@ -89,7 +89,7 @@ namespace shopdecor_api.Repositories.OrderRepositories
 				}
 				
 
-                if (exiInt.TTThanhToan!=false)
+                if (exiInt.TTThanhToan==false)
                 {
 					exiInt.TTDonHang = status;
 					exiInt.LyDoHuy = un;
