@@ -183,5 +183,6 @@ namespace shopdecor_api.Repositories.ProductRepositories
             string keyNoDiacritics = VietnameseHelper.RemoveVietnameseDiacritics(key.ToLower());
             return await _db.SanPham.Where(x => x.TenKhongTiengViet.ToLower().Contains(keyNoDiacritics) && x.TrangThai == true).GetPagedAsync(page, pageSize);
         }
+
     }
 }

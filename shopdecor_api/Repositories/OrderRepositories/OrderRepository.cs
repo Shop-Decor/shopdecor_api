@@ -33,7 +33,15 @@ namespace shopdecor_api.Repositories.OrderRepositories
             await _db.DonHang.AddAsync(donHang);
             foreach (var x in orderDto.OrderDetails)
             {
-                var sp = await _db.SanPham.FirstOrDefaultAsync(z => z.Id == x.SanPhamId);
+                var sanPhamChiTiet = await _db.SanPham_ChiTiet
+            .FirstOrDefaultAsync(spct => spct.SanPhamId == x.SanPhamId);
+
+                if (sanPhamChiTiet != null)
+                {
+                    // Subtract the ordered quantity from the available quantity
+                    sanPhamChiTiet.SoLuong -= x.SoLuong;
+                }
+                    var sp = await _db.SanPham.FirstOrDefaultAsync(z => z.Id == x.SanPhamId);
                 var spct = new DonHang_ChiTiet()
                 {
                     SanPham = sp,

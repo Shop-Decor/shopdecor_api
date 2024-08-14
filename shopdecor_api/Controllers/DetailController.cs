@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using shopdecor_api.Data;
 using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO.ProductDetailDTO;
 using shopdecor_api.Repositories.ProductDetailsRepositories;
@@ -13,12 +15,14 @@ namespace shopdecor_api.Controllers
         private readonly IProductDetailsRepositories _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<ProductDetailsController> _logger;
+        private readonly SeabugDbContext _context;
 
-        public ProductDetailsController(IProductDetailsRepositories repository, IMapper mapper, ILogger<ProductDetailsController> logger)
+        public ProductDetailsController(IProductDetailsRepositories repository, IMapper mapper, ILogger<ProductDetailsController> logger, SeabugDbContext context)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
+            _context = context;
         }
 
         // GET api/productdetails
@@ -161,5 +165,30 @@ namespace shopdecor_api.Controllers
             }
         }
 
+        [HttpGet("details")]
+        public async Task<IActionResult> GetAllProductDetails()
+        {
+            var productDetails = await _context.SanPham_ChiTiet
+                .GroupBy(p => p.SanPhamId)
+                .Select(g => new ProductDetailDTO
+                {
+                    ProductId = g.Key,
+                    ChiTietSanPham = g.Select(p => new ProductDTODetail
+                    {
+                        Color = p.MauSac.TenMauSac, // Assuming MauSac entity has a Ten property for color
+                        Size = p.KichThuoc.TenKichThuoc, // Assuming KichThuoc entity has a Ten property for size
+                        Quantity = p.SoLuong
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            if (productDetails == null || !productDetails.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(productDetails);
+        }
     }
+
 }

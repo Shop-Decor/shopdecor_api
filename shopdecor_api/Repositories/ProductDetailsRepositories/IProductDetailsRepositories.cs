@@ -1,4 +1,5 @@
 ﻿using shopdecor_api.Models.Domain;
+using shopdecor_api.Models.DTO;
 
 namespace shopdecor_api.Repositories.ProductDetailsRepositories
 {
@@ -10,7 +11,7 @@ namespace shopdecor_api.Repositories.ProductDetailsRepositories
         Task UpdateAsync(SanPham_ChiTiet productDetail);
         Task DeleteAsync(int id);
         Task<List<SanPham_ChiTiet>> GetProductsDetailbyproduct(int SpId);
-
+        Task<IEnumerable<ProductDetailDTO>> GetAllProductDetailsAsync();
     }
 
 }
