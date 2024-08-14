@@ -99,5 +99,20 @@ namespace shopdecor_api.Controllers
             var DTO = _mapper.Map<OrderDetailManagementDTO>(orders);
             return Ok(DTO);
         }
+        [HttpPut("user/updateorder")]
+        public async Task<IActionResult> UpdateOredrUser([FromBody] UpdateOrderUserDTO data)
+        {
+            var account = await _accountRepository.GetAccountById(data.UserId);
+            if (account == null)
+            {
+                return Ok(new { success = false, message = "Tài khoản không tồn tại" });
+            }
+            var order = await _orderRipository.Updateorder(data.OrderId, 3, data.Reason);
+            if (order == null)
+            {
+                return Ok(new { success = false, message = "Hủy đơn hàng lỗi" });
+            }
+            return Ok(new { success = true, message = "Hủy đơn hàng thành công" });
+        }
     }
 }

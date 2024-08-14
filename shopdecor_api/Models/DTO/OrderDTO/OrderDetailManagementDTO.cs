@@ -12,6 +12,7 @@ namespace shopdecor_api.Models.DTO.OrderDTO
         // 0. Chờ xách nhận / 1. Đang giao / 2. Đã giao / 3.Đã Hủy
         public byte TTDonHang { get; set; }
         public bool TTThanhToan { get; set; }
+        public bool PTThanhToan { get; set; }
         public string? HoTen { get; set; }
         public string? DiaChi { get; set; }
         public string? SDT { get; set; }

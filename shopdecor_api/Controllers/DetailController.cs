@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using shopdecor_api.Models.Domain;
-using shopdecor_api.Models.DTO;
-using shopdecor_api.Models.DTO.ProductDTO;
+using shopdecor_api.Models.DTO.ProductDetailDTO;
 using shopdecor_api.Repositories.ProductDetailsRepositories;
 
 namespace shopdecor_api.Controllers
@@ -162,6 +160,6 @@ namespace shopdecor_api.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-        
+
     }
 }

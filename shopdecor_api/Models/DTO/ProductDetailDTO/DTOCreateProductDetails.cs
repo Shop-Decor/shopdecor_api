@@ -1,12 +1,12 @@
-﻿namespace shopdecor_api.Models.DTO
+﻿namespace shopdecor_api.Models.DTO.ProductDetailDTO
 {
-    public class DTOUpdateProductDetails
+    public class DTOCreateProductDetails
     {
-        public int Id { get; set; }
+        public int SanPhamId { get; set; }
         public int Gia { get; set; }
         public int SoLuong { get; set; }
         public int KichThuocId { get; set; }
         public int MauSacId { get; set; }
-        public int SanPhamId { get; set; }
+
     }
 }
