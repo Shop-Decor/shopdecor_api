@@ -80,13 +80,23 @@ namespace shopdecor_api.Repositories.OrderRepositories
         {
 
             var exiInt = await _db.DonHang.FirstOrDefaultAsync(s => s.Id == id);
-
-            if (exiInt != null && exiInt.TTThanhToan != true)
+            if( exiInt !=null)
             {
-                exiInt.TTDonHang = status;
-                exiInt.LyDoHuy = un;
-                exiInt.NgayHuy = DateTime.Now;
-            }
+                if (un==null)
+                {
+					exiInt.TTDonHang = status;
+					
+				}
+				
+
+                if (exiInt.TTThanhToan!=false)
+                {
+					exiInt.TTDonHang = status;
+					exiInt.LyDoHuy = un;
+					exiInt.NgayHuy = DateTime.Now;
+				}
+			}
+         
             else
             {
                 return null;
@@ -95,7 +105,8 @@ namespace shopdecor_api.Repositories.OrderRepositories
             await _db.SaveChangesAsync();
             return exiInt;
         }
-        public async Task<DonHang?> Updateorderss(int id, byte status, bool statuspay)
+	
+		public async Task<DonHang?> Updateorderss(int id, byte status, bool statuspay)
         {
             var exiInt = await _db.DonHang.FirstOrDefaultAsync(s => s.Id == id);
             if (exiInt != null)

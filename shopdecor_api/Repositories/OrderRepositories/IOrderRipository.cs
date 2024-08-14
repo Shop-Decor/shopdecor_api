@@ -7,7 +7,7 @@ namespace shopdecor_api.Repositories.OrderRepositories
     {
         Task<IEnumerable<DonHang>> GetAlloderbystatus(byte? status);
         Task<DonHang?> Updateorder(int id, byte status, string? un);
-        Task<DonHang?> GetorderAsync(int id);
+		Task<DonHang?> GetorderAsync(int id);
         Task<DonHang> CreateOrderAsync(CreateOrderDTO orderDto, ApplicationUser applicationUser);
         Task<DonHang?> Updateorderss(int id, byte status, bool statuspay);
         Task<IEnumerable<DonHang>?> GetOtherByIdAccountAndStatusAsync(ApplicationUser account, byte? status);
