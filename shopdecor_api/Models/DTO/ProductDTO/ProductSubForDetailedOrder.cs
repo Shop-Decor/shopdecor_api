@@ -1,5 +1,5 @@
 ﻿using shopdecor_api.Models.DTO.DiscountDTO;
-using shopdecor_api.Models.DTO.ProductDetailDTO;
+using shopdecor_api.Models.DTO.Product_DetailDTO;
 
 namespace shopdecor_api.Models.DTO.ProductDTO
 {

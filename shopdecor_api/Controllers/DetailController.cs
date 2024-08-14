@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Data;
 using shopdecor_api.Models.Domain;
-using shopdecor_api.Models.DTO.ProductDetailDTO;
+using shopdecor_api.Models.DTO.Product_DetailDTO;
 using shopdecor_api.Repositories.ProductDetailsRepositories;
 
 namespace shopdecor_api.Controllers

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Data;
 using shopdecor_api.Helper;
 using shopdecor_api.Models.Domain;
-using shopdecor_api.Models.DTO.ProductDetailDTO;
+using shopdecor_api.Models.DTO.Product_DetailDTO;
 
 namespace shopdecor_api.Repositories.ProductRepositories
 {

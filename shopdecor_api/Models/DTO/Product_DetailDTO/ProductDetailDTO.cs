@@ -1,4 +1,4 @@
-﻿namespace shopdecor_api.Models.DTO
+﻿namespace shopdecor_api.Models.DTO.Product_DetailDTO
 {
     public class ProductDetailDTO
     {

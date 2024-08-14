@@ -6,7 +6,7 @@ using shopdecor_api.Models.Domain;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
 using shopdecor_api.Models.DTO.FilterDTO;
 using shopdecor_api.Models.DTO.PagingDTO;
-using shopdecor_api.Models.DTO.ProductDetailDTO;
+using shopdecor_api.Models.DTO.Product_DetailDTO;
 using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Repositories.DiscountRepositories;
 using shopdecor_api.Repositories.ImageRepositories;

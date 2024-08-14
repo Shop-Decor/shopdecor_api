@@ -1,5 +1,5 @@
 ﻿using shopdecor_api.Models.Domain;
-using shopdecor_api.Models.DTO;
+using shopdecor_api.Models.DTO.Product_DetailDTO;
 
 namespace shopdecor_api.Repositories.ProductDetailsRepositories
 {

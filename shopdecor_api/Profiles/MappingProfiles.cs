@@ -7,7 +7,7 @@ using shopdecor_api.Models.DTO.ColorDTO;
 using shopdecor_api.Models.DTO.DiscountDTO;
 using shopdecor_api.Models.DTO.OrderDetailDTO;
 using shopdecor_api.Models.DTO.OrderDTO;
-using shopdecor_api.Models.DTO.ProductDetailDTO;
+using shopdecor_api.Models.DTO.Product_DetailDTO;
 using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Models.DTO.SizeDTO;
 using shopdecor_api.Models.DTO.StatisticalDTO;
