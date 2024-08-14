@@ -24,6 +24,7 @@ namespace shopdecor_api.Repositories.ProductRepositories
         {
             model.NgayTao = DateTime.Now;
             model.TrangThai = true;
+            model.TenKhongTiengViet = VietnameseHelper.RemoveVietnameseDiacritics(model.Ten);
             await _db.SanPham.AddAsync(model);
             await _db.SaveChangesAsync();
             return model;
@@ -49,7 +50,7 @@ namespace shopdecor_api.Repositories.ProductRepositories
                 product.MoTa = model.MoTa;
                 product.KhuyenMai = model.KhuyenMai;
                 product.TrangThai = model.TrangThai;
-
+                product.TenKhongTiengViet = VietnameseHelper.RemoveVietnameseDiacritics(model.Ten);
             }
 
             await _db.SaveChangesAsync();
@@ -122,6 +123,7 @@ namespace shopdecor_api.Repositories.ProductRepositories
             {
                 Ten = productWithDetails.Ten,
                 MoTa = productWithDetails.MoTa,
+                TenKhongTiengViet = VietnameseHelper.RemoveVietnameseDiacritics(productWithDetails.Ten),
                 NgayTao = DateTime.Now,
                 TrangThai = true
 
