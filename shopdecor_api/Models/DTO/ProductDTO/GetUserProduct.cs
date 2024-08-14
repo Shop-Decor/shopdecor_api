@@ -14,6 +14,6 @@
         public bool LoaiGiam { get; set; }
         public int MenhGia { get; set; }
         public string? Size { get; set; }
-        public int SoLuong { get; set; }
+        public int TotalCount { get; set; }
     }
 }

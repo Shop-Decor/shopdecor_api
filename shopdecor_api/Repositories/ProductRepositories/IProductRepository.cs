@@ -1,6 +1,6 @@
 ﻿using shopdecor_api.Helper;
 using shopdecor_api.Models.Domain;
-using shopdecor_api.Models.DTO;
+using shopdecor_api.Models.DTO.ProductDetailDTO;
 
 namespace shopdecor_api.Repositories.ProductRepositories
 {
@@ -24,6 +24,5 @@ namespace shopdecor_api.Repositories.ProductRepositories
         Task<PagedResult<SanPham>?> GetPagedSearchAsync(string? key, int page, int pageSize);
 
         IQueryable<SanPham> GetQueryable();
-
     }
 }
