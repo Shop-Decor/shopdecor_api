@@ -1,8 +1,8 @@
-﻿using shopdecor_api.Models.Domain;
-namespace shopdecor_api.Models.DTO
+﻿namespace shopdecor_api.Models.DTO.ProductDetailDTO
 {
-    public class AddDetails
+    public class DTOUpdateProductDetails
     {
+        public int Id { get; set; }
         public int Gia { get; set; }
         public int SoLuong { get; set; }
         public int KichThuocId { get; set; }

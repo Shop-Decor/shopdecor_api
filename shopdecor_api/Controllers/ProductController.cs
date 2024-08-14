@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using shopdecor_api.Helper;
 using shopdecor_api.Models.Domain;
-using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
 using shopdecor_api.Models.DTO.FilterDTO;
 using shopdecor_api.Models.DTO.PagingDTO;
+using shopdecor_api.Models.DTO.ProductDetailDTO;
 using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Repositories.DiscountRepositories;
 using shopdecor_api.Repositories.ImageRepositories;
@@ -180,6 +180,10 @@ namespace shopdecor_api.Controllers
                 return NotFound(new { Message = "Không có sản phẩm nào" });
             }
             var distinctProducts = allProducts.Where(x => x.Id != SpId).Distinct().ToList();
+            if (distinctProducts.Count() > 10)
+            {
+                distinctProducts = distinctProducts.Take(10).ToList();
+            }
             var productDTO = _mapper.Map<List<GetUserProduct>>(distinctProducts);
             return Ok(productDTO);
         }

@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using shopdecor_api.Helper;
 using shopdecor_api.Models.Domain;
-using shopdecor_api.Models.DTO;
 using shopdecor_api.Models.DTO.Category_TypeDTO;
 using shopdecor_api.Models.DTO.CategoryDTO;
 using shopdecor_api.Models.DTO.ColorDTO;
 using shopdecor_api.Models.DTO.DiscountDTO;
 using shopdecor_api.Models.DTO.OrderDetailDTO;
 using shopdecor_api.Models.DTO.OrderDTO;
+using shopdecor_api.Models.DTO.ProductDetailDTO;
 using shopdecor_api.Models.DTO.ProductDTO;
 using shopdecor_api.Models.DTO.SizeDTO;
 using shopdecor_api.Models.DTO.StatisticalDTO;
@@ -38,7 +38,7 @@ namespace shopdecor_api.Profiles
                 .ForMember(dest => dest.LoaiGiam, opt => opt.MapFrom(x => x.KhuyenMai.LoaiGiam))
                 .ForMember(dest => dest.MenhGia, opt => opt.MapFrom(x => x.KhuyenMai.MenhGia))
                 .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.SanPham_ChiTiets.OrderBy(s => s.Gia).Select(s => s.KichThuoc.TenKichThuoc).FirstOrDefault()))
-                .ForMember(dest => dest.SoLuong, opt => opt.MapFrom(src => src.SanPham_ChiTiets.OrderBy(s => s.Gia).Select(x => x.SoLuong).FirstOrDefault()))
+                .ForMember(dest => dest.TotalCount, opt => opt.MapFrom(src => src.SanPham_ChiTiets.Sum(x => x.SoLuong)))
                 .ForMember(dest => dest.MaGiamGia, opt => opt.MapFrom(x => x.KhuyenMai.MaGiamGia))
                 .ReverseMap();
 
@@ -80,17 +80,28 @@ namespace shopdecor_api.Profiles
                 .ForMember(x => x.Product, y => y.MapFrom(z => z.SanPham))
                 .ReverseMap();
 
+            CreateMap<SanPham_ChiTiet, SubProductDetail>()
+                .ForMember(x => x.Color, y => y.MapFrom(z => z.MauSac))
+                .ForMember(x => x.Size, y => y.MapFrom(z => z.KichThuoc))
+                .ReverseMap();
+
             CreateMap<SanPham, ProductSubForDetailedOrder>()
                 .ForMember(x => x.hinh, y => y.MapFrom(z => z.Hinhs.FirstOrDefault().Link))
+                .ForMember(x => x.Discount, y => y.MapFrom(z => z.KhuyenMai))
+                .ForMember(x => x.PrDetail, y => y.MapFrom(z => z.SanPham_ChiTiets))
                 .ReverseMap();
+
+            CreateMap<MauSac, SubColor>().ReverseMap();
+
+            CreateMap<KichThuoc, SubSize>().ReverseMap();
+
 
             CreateMap<DonHang, OrderDetailManagementDTO>()
                 .ForMember(x => x.Detail, y => y.MapFrom(z => z.DonHang_ChiTiets))
                 .ForMember(x => x.Discount, y => y.MapFrom(z => z.KhuyenMai))
                 .ReverseMap();
 
-            CreateMap<KhuyenMai, DiscountSubForDetailedOrder>()
-                .ReverseMap();
+            CreateMap<KhuyenMai, DiscountSubForDetailedOrder>().ReverseMap();
 
             CreateMap<MauSac, ColorDTO>().ReverseMap();
 

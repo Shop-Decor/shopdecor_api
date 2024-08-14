@@ -78,9 +78,8 @@ namespace shopdecor_api.Repositories.OrderRepositories
 
             var exiInt = await _db.DonHang.FirstOrDefaultAsync(s => s.Id == id);
 
-            if (exiInt != null)
+            if (exiInt != null && exiInt.TTThanhToan != true)
             {
-
                 exiInt.TTDonHang = status;
                 exiInt.LyDoHuy = un;
                 exiInt.NgayHuy = DateTime.Now;
