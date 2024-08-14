@@ -6,6 +6,7 @@ namespace shopdecor_api.Repositories.AccountRepositories
 {
     public interface IAccountRepository
     {
+        public Task<IdentityResult> CreateFirstAccount();
         public Task<IdentityResult> SignUpAsync(SignUpModel model);
         public Task<string> SignInAsync(SignInModel model);
         public Task<ApplicationUser> ValidateTokenAndGetUserAsync(string token);

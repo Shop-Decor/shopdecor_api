@@ -27,7 +27,30 @@ namespace shopdecor_api.Repositories.AccountRepositories
             this.configuration = configuration;
             this.roleManager = roleManager;
         }
+        //create fisrt account when run project
+        public async Task<IdentityResult> CreateFirstAccount()
+        {
+            //check user đã tồn tại chưa
+            if (await userManager.Users.AnyAsync())
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "2000" });
+            }
 
+            var user = new ApplicationUser
+            {
+                UserName = "admin",
+                FullName = "admin",
+                Email = "admin@gmail.com",
+                Status = true,
+            };
+            var result = await userManager.CreateAsync(user, "Admin@123");
+            if (result.Succeeded) {
+                await roleManager.CreateAsync(new IdentityRole(AppRole.Admin));
+                await userManager.AddToRoleAsync(user, AppRole.Admin);
+            }
+            return result;
+        }
+    
 
         public async Task<string> SignInAsync(SignInModel model)
         {
@@ -291,10 +314,18 @@ namespace shopdecor_api.Repositories.AccountRepositories
 
         public async Task<IdentityResult> DeleteUser(string ID)
         {
+            //đếm số lượng user là admin có trong db, nếu admin = 1, và status = true thì không thể xóa
+           var count = (await userManager.GetUsersInRoleAsync(AppRole.Admin)).Where(x => x.Status == true).Count();
+            if (count == 1)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "2003" });
+            }
+            
+           
             var user = await userManager.FindByIdAsync(ID);
             if (user == null)
             {
-                return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+                return IdentityResult.Failed(new IdentityError { Description = "2004" });
             }
             user.Status = false;
             var result = await userManager.UpdateAsync(user);

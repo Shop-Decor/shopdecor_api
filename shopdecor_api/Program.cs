@@ -21,8 +21,6 @@ using shopdecor_api.Repositories.StatisticalRepositories;
 using shopdecor_api.Services;
 using System.Text;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -62,7 +60,6 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-
 builder.Services.AddDbContext<SeabugDbContext>(options =>
 {
     options.UseLazyLoadingProxies();
@@ -83,8 +80,6 @@ builder.Services.AddScoped<IProductDetailsRepositories, ProductDetailsRepositori
 builder.Services.AddScoped<IProduct_CategoryRepository, Product_CategoryRepository>();
 builder.Services.AddScoped<StatisticalRepository>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
-
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<SeabugDbContext>()
@@ -108,6 +103,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };
 });
+
 builder.Services.AddSingleton<IVnPayService, VnPayService>();
 builder.Services.AddCors(options =>
 {
@@ -119,10 +115,31 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddScoped<AccountService>();
 
 var app = builder.Build();
 
-
+// Automatically create the first admin account on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var accountService = services.GetRequiredService<AccountService>();
+        var result = await accountService.CreateFirstAccount();
+        if (!result.Succeeded)
+        {
+            // Handle the error, log it if necessary
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError("Failed to create first account: {Errors}", string.Join(", ", result.Errors.Select(e => e.Description)));
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while creating the first account.");
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {
