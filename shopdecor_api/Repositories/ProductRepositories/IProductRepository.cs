@@ -24,5 +24,7 @@ namespace shopdecor_api.Repositories.ProductRepositories
         Task<PagedResult<SanPham>?> GetPagedSearchAsync(string? key, int page, int pageSize);
 
         IQueryable<SanPham> GetQueryable();
+
+        Task<IEnumerable<SanPham>?> GetFeaturedProductsAsync();
     }
 }
