@@ -22,10 +22,11 @@ namespace shopdecor_api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> orderStatus(byte status)
+        public async Task<IActionResult> orderStatus(byte? status)
         {
             var orderstatus = await _orderRipository.GetAlloderbystatus(status);
-            return Ok(orderstatus);
+            var orderStatusDtos = _mapper.Map<IEnumerable<OrderDTO>>(orderstatus);
+            return Ok(orderStatusDtos);
         }
 
         [HttpPut("{id}")]

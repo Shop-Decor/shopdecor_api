@@ -3,7 +3,10 @@
 	public class OrderDTO
 	{
 		public int Id { get; set; }
-		public DateTime NgayTao { get; set; }
+        public string? HoTen { get; set; }
+        public string? DiaChi { get; set; }
+        public string? SDT { get; set; }
+        public DateTime NgayTao { get; set; }
 		public DateTime NgayHuy { get; set; }
 
 		public string? LyDoHuy { get; set; }

@@ -58,9 +58,12 @@ namespace shopdecor_api.Repositories.OrderRepositories
             return donHang;
         }
 
-        public async Task<IEnumerable<DonHang>> GetAlloderbystatus(byte status)
+        public async Task<IEnumerable<DonHang>> GetAlloderbystatus(byte? status)
         {
-            return await _db.DonHang.Where(s => s.TTDonHang == status).ToListAsync();
+            //select id, HoTen, DiaChi, SDT, Email, NgayTao, TTDonHang, TTThanhToan, ThanhTien, LyDoHuy, NgayHuy, ApplicationUserId from DonHang where TTDonHang = status
+            
+            return await _db.DonHang.Where(x => status == null || x.TTDonHang == status).ToListAsync();
+
         }
 
         public async Task<DonHang?> GetorderAsync(int id)
